@@ -1,0 +1,18 @@
+user_id,name,email,role,level,program,department,courses,levels
+12345678,John Doe,john.doe@gctu.edu.gh,student,100,Computer Science,Computer Science,,
+87654321,Jane Smith,jane.smith@gctu.edu.gh,student,200,Information Technology,Information Technology,,
+11111111,Bob Johnson,bob.johnson@gctu.edu.gh,student,300,Software Engineering,Software Engineering,,
+22222222,Alice Brown,alice.brown@gctu.edu.gh,student,100,Computer Science,Computer Science,,
+33333333,Charlie Wilson,charlie.wilson@gctu.edu.gh,student,200,Information Technology,Information Technology,,
+44444444,Mary Davis,mary.davis@gctu.edu.gh,student,300,Software Engineering,Software Engineering,,
+55555555,David Miller,david.miller@gctu.edu.gh,student,400,Computer Science,Computer Science,,
+66666666,Sarah Wilson,sarah.wilson@gctu.edu.gh,student,100,Information Technology,Information Technology,,
+77777777,Michael Brown,michael.brown@gctu.edu.gh,student,200,Software Engineering,Software Engineering,,
+88888888,Emily Johnson,emily.johnson@gctu.edu.gh,student,300,Computer Science,Computer Science,,
+john.lecturer@gctu.edu.gh,Dr. John Lecturer,john.lecturer@gctu.edu.gh,lecturer,,,Computer Science,"CSC 101,CSC 102,CSC 201","100,200"
+sarah.lecturer@gctu.edu.gh,Prof. Sarah Davis,sarah.davis@gctu.edu.gh,lecturer,,,Information Technology,"IT 101,IT 201,IT 301","100,200,300"
+robert.lecturer@gctu.edu.gh,Dr. Robert Smith,robert.smith@gctu.edu.gh,lecturer,,,Software Engineering,"SE 101,SE 201,SE 301","100,200,300"
+mary.lecturer@gctu.edu.gh,Prof. Mary Johnson,mary.johnson@gctu.edu.gh,lecturer,,,Computer Science,"CSC 301,CSC 401","300,400"
+mike.examiner@gctu.edu.gh,Dr. Mike Johnson,mike.johnson@gctu.edu.gh,examiner,,,,,
+lisa.examiner@gctu.edu.gh,Prof. Lisa Chen,lisa.chen@gctu.edu.gh,examiner,,,,,
+james.examiner@gctu.edu.gh,Dr. James Wilson,james.wilson@gctu.edu.gh,examiner,,,,,

@@ -1,0 +1,237 @@
+<!-- Example: c:\Users\akpeh\OneDrive\Documents\Attendance System\frontend\lecturer\students.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Profile - GCTU Attendance System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #f4f6fb;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 210px;
+            background: #fff;
+            border-radius: 18px;
+            margin: 24px 0 24px 24px;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.08);
+            display: flex;
+            flex-direction: column;
+            padding: 2em 1em 1em 1em;
+        }
+        .sidebar .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2em;
+        }
+        .sidebar .logo img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: contain;
+            background: #f5f6fa;
+        }
+        .sidebar .logo h2 {
+            font-size: 1.1em;
+            color: #6c63ff;
+            font-weight: bold;
+            margin: 0;
+        }
+        .sidebar .menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar .menu li {
+            margin-bottom: 1.2em;
+        }
+        .sidebar .menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #555;
+            font-size: 1.05em;
+            padding: 0.7em 1em;
+            border-radius: 8px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar .menu .active a,
+        .sidebar .menu a:hover {
+            background: #6c63ff;
+            color: #fff;
+        }
+        .sidebar .menu i {
+            font-size: 1.2em;
+        }
+        .sidebar .help-support {
+            margin-top: auto;
+        }
+        .sidebar .help-support h3 {
+            font-size: 1em;
+            margin: 1.5em 0 0.5em 0;
+            color: #888;
+        }
+        .sidebar .help-support ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar .help-support li {
+            margin-bottom: 0.7em;
+        }
+        .sidebar .help-support a {
+            color: #6c63ff;
+            text-decoration: none;
+            font-size: 1em;
+        }
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin: 24px 24px 24px 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .settings-header {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 1.5em;
+            color: #333;
+        }
+        .profile-info-section {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(44,62,80,0.08);
+            padding: 2.5em 2em 2em 2em;
+            max-width: 700px;
+            margin: 2em auto 0 auto;
+        }
+        .profile-info-header {
+            display: flex;
+            align-items: center;
+            gap: 1.2em;
+            margin-bottom: 2em;
+        }
+        .profile-info-header img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #6c63ff;
+        }
+        .profile-info-header .profile-info-main {
+            display: flex;
+            flex-direction: column;
+        }
+        .profile-info-header .profile-info-main .profile-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+        .profile-info-header .profile-info-main .profile-role {
+            color: #888;
+            font-size: 1em;
+        }
+        .profile-details-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0.7em;
+        }
+        .profile-details-table td {
+            padding: 0.5em 1em 0.5em 0;
+            font-size: 1em;
+            color: #333;
+        }
+        .profile-details-table .label {
+            color: #888;
+            width: 160px;
+            font-weight: 500;
+        }
+        @media (max-width: 900px) {
+            .profile-info-section {
+                padding: 1.2em 0.5em;
+                max-width: 98vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="../../gctu logo.png" alt="School Logo">
+                <h2>GCTU Attendance</h2>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="students.html"><i class="fas fa-user-graduate"></i> Students</a></li>
+                    <li><a href="attendance.html"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+                    <li><a href="courses.html"><i class="fas fa-book"></i> Courses</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li class="active"><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </div>
+            <div class="help-support">
+                <h3>Help & Support</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                    <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="settings-header">Profile Information</div>
+            <div class="profile-info-section">
+                <div class="profile-info-header">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture">
+                    <div class="profile-info-main">
+                        <div class="profile-name">Dr. John Doe</div>
+                        <div class="profile-role">Senior Lecturer</div>
+                    </div>
+                </div>
+                <table class="profile-details-table">
+                    <tr>
+                        <td class="label">First Name</td>
+                        <td>John</td>
+                        <td class="label">Last Name</td>
+                        <td>Doe</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Email address</td>
+                        <td>johndoe@gctu.edu.gh</td>
+                        <td class="label">Phone</td>
+                        <td>0241234567</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Department</td>
+                        <td>Computer Science</td>
+                        <td class="label">Gender</td>
+                        <td>Male</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Date of Birth</td>
+                        <td>10 June, 1980</td>
+                        <td class="label">Staff ID</td>
+                        <td>GCTU12345</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Address</td>
+                        <td colspan="3">123 University Ave, Accra, Ghana</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

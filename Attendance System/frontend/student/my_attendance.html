@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Attendance System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar" style="position:fixed;left:0;top:0;bottom:0;width:210px;background:#fff;border-radius:18px;margin:24px 0 24px 24px;box-shadow:0 4px 24px rgba(44,62,80,0.08);display:flex;flex-direction:column;padding:2em 1em 1em 1em;z-index:100;">
+            <div class="logo" style="display:flex;align-items:center;gap:12px;margin-bottom:2em;">
+                <img src="../../gctu logo.png" alt="School Logo" style="width:48px;height:48px;border-radius:50%;object-fit:contain;background:#f5f6fa;">
+                <h2 style="font-size:1.1em;color:#6c63ff;font-weight:bold;margin:0;">GCTU Attendance</h2>
+            </div>
+            <div class="menu">
+                <ul style="list-style:none;padding:0;margin:0;">
+                    <li><a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:#555;font-size:1.05em;padding:0.7em 1em;border-radius:8px;transition:background 0.2s, color 0.2s;"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="timetable.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:#555;font-size:1.05em;padding:0.7em 1em;border-radius:8px;transition:background 0.2s, color 0.2s;"><i class="fas fa-calendar-alt"></i> Timetable</a></li>
+                    <li><a href="my_attendance.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:#555;font-size:1.05em;padding:0.7em 1em;border-radius:8px;transition:background 0.2s, color 0.2s;"><i class="fas fa-check-circle"></i> My Attendance</a></li>
+                    <li><a href="my_course.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:#555;font-size:1.05em;padding:0.7em 1em;border-radius:8px;transition:background 0.2s, color 0.2s;"><i class="fas fa-user"></i> Profile</a></li>
+                </ul>
+            </div>
+            <div class="help-support" style="margin-top:auto;">
+                <h3 style="font-size:1em;margin:1.5em 0 0.5em 0;color:#888;">Help & Support</h3>
+                <ul style="list-style:none;padding:0;margin:0;">
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                    <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search your data">
+                </div>
+                <div class="user-profile">
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="profile">
+                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <span>John Smith</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button id="scanBtn" class="action-btn primary"><i class="fas fa-qrcode"></i> Scan Attendance</button>
+                <button class="action-btn secondary"><i class="fas fa-file-alt"></i> Request Absence</button>
+                <button class="action-btn secondary"><i class="fas fa-download"></i> Download Report</button>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Attendance Rate</h3>
+                        <h2>92%</h2>
+                        <span class="increase">+3% <span>From Last Month</span></span>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Total Classes</h3>
+                        <h2>48</h2>
+                        <span class="neutral">+0 <span>This Week</span></span>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Classes Attended</h3>
+                        <h2>44</h2>
+                        <span class="increase">+2 <span>This Week</span></span>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Classes Missed</h3>
+                        <h2>4</h2>
+                        <span class="decrease">-1 <span>This Week</span></span>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scanner Section -->
+            <div class="scanner-section">
+                <div class="section-header">
+                    <h2>Attendance Scanner</h2>
+                </div>
+                <div id="scanner" class="scanner-container">
+                    <div class="scanner-placeholder">
+                        <i class="fas fa-qrcode"></i>
+                        <p>Click the "Scan Attendance" button to activate the scanner</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Sections -->
+            <div class="bottom-container">
+                <!-- Today's Schedule -->
+                <div class="schedule-list">
+                    <div class="section-header">
+                        <h2>Today's Schedule</h2>
+                        <a href="timetable.html" class="view-all">See Full Timetable <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                    <div class="schedule-items">
+                        <div class="schedule-item">
+                            <div class="time-slot">
+                                <span class="time">08:00 - 10:00</span>
+                                <div class="status completed">Completed</div>
+                            </div>
+                            <div class="course-details">
+                                <h4>Computer Science 101</h4>
+                                <p><i class="fas fa-map-marker-alt"></i> Room 203, Block A</p>
+                                <p><i class="fas fa-user"></i> Dr. Smith</p>
+                            </div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="time-slot">
+                                <span class="time">11:00 - 13:00</span>
+                                <div class="status ongoing">Ongoing</div>
+                            </div>
+                            <div class="course-details">
+                                <h4>Mathematics 202</h4>
+                                <p><i class="fas fa-map-marker-alt"></i> Room 105, Block B</p>
+                                <p><i class="fas fa-user"></i> Dr. Johnson</p>
+                            </div>
+                        </div>
+                        <div class="schedule-item">
+                            <div class="time-slot">
+                                <span class="time">14:00 - 16:00</span>
+                                <div class="status upcoming">Upcoming</div>
+                            </div>
+                            <div class="course-details">
+                                <h4>Physics 101</h4>
+                                <p><i class="fas fa-map-marker-alt"></i> Lab 3, Block C</p>
+                                <p><i class="fas fa-user"></i> Dr. Williams</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attendance History -->
+                <div class="attendance-history">
+                    <div class="section-header">
+                        <h2>Attendance History</h2>
+                        <a href="my_attendance.html" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                    <div id="history" class="history-items">
+                        <div class="history-item">
+                            <div class="history-date">Mon, 15 May</div>
+                            <div class="history-courses">
+                                <div class="course-attendance present">
+                                    <span class="course-name">Computer Science 101</span>
+                                    <span class="attendance-status">Present</span>
+                                </div>
+                                <div class="course-attendance present">
+                                    <span class="course-name">Mathematics 202</span>
+                                    <span class="attendance-status">Present</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-date">Tue, 16 May</div>
+                            <div class="history-courses">
+                                <div class="course-attendance present">
+                                    <span class="course-name">Physics 101</span>
+                                    <span class="attendance-status">Present</span>
+                                </div>
+                                <div class="course-attendance absent">
+                                    <span class="course-name">English 101</span>
+                                    <span class="attendance-status">Absent</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-date">Wed, 17 May</div>
+                            <div class="history-courses">
+                                <div class="course-attendance present">
+                                    <span class="course-name">Computer Science 101</span>
+                                    <span class="attendance-status">Present</span>
+                                </div>
+                                <div class="course-attendance present">
+                                    <span class="course-name">Mathematics 202</span>
+                                    <span class="attendance-status">Present</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../auth.js"></script>
+    <script src="../database-client.js"></script>
+    <script>
+        // Global variables
+        let attendanceData = {};
+
+        // Load student attendance data
+        async function loadStudentAttendance() {
+            try {
+                const response = await fetch('http://localhost:5000/student/attendance', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    attendanceData = result.attendance;
+                    updateAttendanceUI();
+                } else {
+                    console.error('Error loading attendance:', result.message);
+                    loadMockAttendanceData();
+                }
+            } catch (error) {
+                console.error('Error loading attendance:', error);
+                loadMockAttendanceData();
+            }
+        }
+
+        // Update attendance UI with real data
+        function updateAttendanceUI() {
+            // Update stats cards
+            updateStatsCards();
+
+            // Update today's schedule
+            updateTodaySchedule();
+
+            // Update attendance history
+            updateAttendanceHistory();
+        }
+
+        // Update statistics cards
+        function updateStatsCards() {
+            // Mock stats for now - in real app, this would come from the API
+            const stats = {
+                attendance_rate: 92,
+                total_classes: 48,
+                classes_attended: 44,
+                classes_missed: 4
+            };
+
+            // Update the stat cards with calculated data
+            const statCards = document.querySelectorAll('.stat-card h2');
+            if (statCards.length >= 4) {
+                statCards[0].textContent = stats.attendance_rate + '%';
+                statCards[1].textContent = stats.total_classes;
+                statCards[2].textContent = stats.classes_attended;
+                statCards[3].textContent = stats.classes_missed;
+            }
+        }
+
+        // Update today's schedule
+        function updateTodaySchedule() {
+            // Mock today's schedule - in real app, this would come from the API
+            const todaySchedule = [
+                {time: '08:00 - 10:00', course: 'Computer Science 101', room: 'Room 203, Block A', lecturer: 'Dr. Smith', status: 'completed'},
+                {time: '11:00 - 13:00', course: 'Mathematics 202', room: 'Room 105, Block B', lecturer: 'Dr. Johnson', status: 'ongoing'},
+                {time: '14:00 - 16:00', course: 'Physics 101', room: 'Lab 3, Block C', lecturer: 'Dr. Williams', status: 'upcoming'}
+            ];
+
+            const scheduleItems = document.querySelector('.schedule-items');
+            if (scheduleItems && todaySchedule.length > 0) {
+                const scheduleHtml = todaySchedule.map(item => `
+                    <div class="schedule-item">
+                        <div class="time-slot">
+                            <span class="time">${item.time}</span>
+                            <div class="status ${item.status}">Completed</div>
+                        </div>
+                        <div class="course-details">
+                            <h4>${item.course}</h4>
+                            <p><i class="fas fa-map-marker-alt"></i> ${item.room}</p>
+                            <p><i class="fas fa-user"></i> ${item.lecturer}</p>
+                        </div>
+                    </div>
+                `).join('');
+                scheduleItems.innerHTML = scheduleHtml;
+            }
+        }
+
+        // Update attendance history
+        function updateAttendanceHistory() {
+            const historyItems = document.getElementById('history');
+            if (historyItems && attendanceData.length > 0) {
+                const historyHtml = attendanceData.map(record => `
+                    <div class="history-item">
+                        <div class="history-date">${new Date(record.date).toLocaleDateString('en-US', {weekday: 'short', month: 'short', day: 'numeric'})}</div>
+                        <div class="history-courses">
+                            <div class="course-attendance ${record.status.toLowerCase()}">
+                                <span class="course-name">${record.course}</span>
+                                <span class="attendance-status">${record.status.charAt(0).toUpperCase() + record.status.slice(1)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                historyItems.innerHTML = historyHtml;
+            }
+        }
+
+        // Fallback mock data
+        function loadMockAttendanceData() {
+            attendanceData = [
+                {date: '2024-01-15', course: 'Data Structures', status: 'present'},
+                {date: '2024-01-16', course: 'Database Systems', status: 'present'},
+                {date: '2024-01-17', course: 'Calculus II', status: 'absent'},
+                {date: '2024-01-18', course: 'Data Structures', status: 'present'},
+                {date: '2024-01-19', course: 'Database Systems', status: 'present'}
+            ];
+            updateAttendanceUI();
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStudentAttendance();
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

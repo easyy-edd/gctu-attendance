@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - Student Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #f4f6fb;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 220px;
+            background: #fff;
+            border-radius: 18px;
+            margin: 24px 0 24px 24px;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.08);
+            display: flex;
+            flex-direction: column;
+            padding: 2em 1em 1em 1em;
+            z-index: 100;
+            min-height: 90vh;
+        }
+        .sidebar .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2em;
+        }
+        .sidebar .logo img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: contain;
+            background: #f5f6fa;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+        }
+        .sidebar h2 {
+            font-size: 1.1em;
+            color: #6c63ff;
+            font-weight: bold;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+        .sidebar .menu {
+            flex: 1;
+        }
+        .sidebar .menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar .menu ul li {
+            margin-bottom: 1em;
+        }
+        .sidebar .menu ul li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #555;
+            font-size: 1.05em;
+            padding: 0.7em 1em;
+            border-radius: 8px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar .menu ul li a:hover,
+        .sidebar .menu ul li a.active {
+            background: #e9eafc;
+            color: #6c63ff;
+            font-weight: bold;
+        }
+        .sidebar .help-support {
+            margin-top: auto;
+        }
+        .sidebar .help-support h3 {
+            font-size: 1em;
+            margin: 1.5em 0 0.5em 0;
+            color: #888;
+        }
+        .sidebar .help-support ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar .help-support ul li {
+            margin-bottom: 1em;
+        }
+        .sidebar .help-support ul li a {
+            text-decoration: none;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+        .sidebar .help-support ul li a:hover {
+            color: #6c63ff;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 2.5em 2em 2em 2em;
+            max-width: 600px;
+        }
+        .edit-form-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(44,62,80,0.08);
+            padding: 2em 2.5em;
+        }
+        .edit-form-card h2 {
+            color: #6c63ff;
+            margin-bottom: 1.5em;
+            text-align: center;
+            font-size: 1.5em;
+        }
+        .form-group {
+            margin-bottom: 1.5em;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5em;
+            color: #333;
+            font-weight: bold;
+            font-size: 1em;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.8em;
+            border: 2px solid #e9eafc;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #6c63ff;
+        }
+        .form-group input[type="password"] {
+            font-family: 'Courier New', monospace;
+        }
+        .btn {
+            background: linear-gradient(90deg, #6c63ff 60%, #554fd8 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8em 2em;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.10);
+            width: 100%;
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #554fd8 60%, #6c63ff 100%);
+            box-shadow: 0 4px 16px rgba(44,62,80,0.13);
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .message {
+            margin-top: 1em;
+            padding: 1em;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        @media (max-width: 1100px) {
+            .main-content {
+                margin-left: 0;
+                padding: 1em;
+            }
+            .sidebar {
+                position: static;
+                width: 100%;
+                margin: 0 0 1em 0;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">
+            <img src="../../gctu logo.png" alt="School Logo">
+            <h2>GCTU Attendance</h2>
+        </div>
+        <div class="menu">
+            <ul>
+                <li><a href="index.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="timetable.html"><i class="fas fa-calendar-alt"></i> Timetable</a></li>
+                <li><a href="my_attendance.html"><i class="fas fa-check-circle"></i> My Attendance</a></li>
+                <li><a href="my_course.html" class="active"><i class="fas fa-user"></i> Profile</a></li>
+            </ul>
+        </div>
+        <div class="help-support">
+            <h3>Help & Support</h3>
+            <ul>
+                <li><a href="#"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="edit-form-card">
+            <h2><i class="fas fa-key"></i> Change Password</h2>
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label for="oldPassword">Current Password</label>
+                    <input type="password" id="oldPassword" name="oldPassword" required placeholder="Enter your current password">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" name="newPassword" required placeholder="Enter your new password" minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm New Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your new password">
+                </div>
+                <button type="submit" class="btn" id="submitBtn">
+                    <i class="fas fa-save"></i> Change Password
+                </button>
+            </form>
+            <div id="message" class="message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('changePasswordForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const messageDiv = document.getElementById('message');
+
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validate passwords match
+            if (newPassword !== confirmPassword) {
+                messageDiv.textContent = 'New passwords do not match!';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                return;
+            }
+
+            // Disable button during submission
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Changing...';
+
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const response = await fetch('http://localhost:5000/change_password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        old_password: oldPassword,
+                        new_password: newPassword
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.status === 'success') {
+                    messageDiv.textContent = 'Password changed successfully!';
+                    messageDiv.className = 'message success';
+                    messageDiv.style.display = 'block';
+
+                    // Clear form
+                    document.getElementById('changePasswordForm').reset();
+
+                    // Redirect after success
+                    setTimeout(() => {
+                        window.location.href = 'my_course.html';
+                    }, 2000);
+                } else {
+                    messageDiv.textContent = data.message || 'Failed to change password';
+                    messageDiv.className = 'message error';
+                    messageDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                messageDiv.textContent = 'Network error. Please try again.';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save"></i> Change Password';
+            }
+        });
+    </script>
+</body>
+</html>

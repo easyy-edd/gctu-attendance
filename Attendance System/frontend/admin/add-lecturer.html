@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Lecturer - Admin Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #f6f7fb;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .add-lecturer-container {
+            max-width: 1100px;
+            margin: 40px auto 0 auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.10);
+            padding: 2.5em 2em 2em 2em;
+        }
+        .add-lecturer-header {
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            margin-bottom: 0.2em;
+        }
+        .add-lecturer-header .icon {
+            background: #a21caf;
+            color: #fff;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+        }
+        .add-lecturer-header h2 {
+            margin: 0;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #222;
+        }
+        .add-lecturer-desc {
+            color: #888;
+            font-size: 1em;
+            margin-bottom: 2em;
+            margin-left: 2.5em;
+        }
+        .lecturer-form-row {
+            display: flex;
+            gap: 1.5em;
+            margin-bottom: 1.2em;
+        }
+        .lecturer-form-row .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            font-size: 0.98em;
+            color: #444;
+            margin-bottom: 0.4em;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group select {
+            padding: 0.9em;
+            border: 1px solid #ececff;
+            border-radius: 8px;
+            font-size: 1em;
+            background: #f8f9fc;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: 2px solid #a21caf33;
+            border-color: #a21caf;
+        }
+        .courses-section {
+            margin-top: 1.5em;
+        }
+        .courses-section label {
+            font-weight: 600;
+            color: #a21caf;
+            margin-bottom: 0.5em;
+            display: block;
+        }
+        .courses-list {
+            background: #f5f6fa;
+            border-radius: 10px;
+            padding: 1em 1.2em;
+            margin-bottom: 1em;
+            font-size: 0.98em;
+            color: #555;
+            min-height: 40px;
+        }
+        .add-course-row {
+            display: flex;
+            gap: 1em;
+            margin-bottom: 1.5em;
+        }
+        .add-course-row input {
+            flex: 1;
+        }
+        .add-course-btn {
+            background: #a21caf;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.7em 1.5em;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .add-course-btn:hover {
+            background: #7c1c7c;
+        }
+        .submit-btn {
+            background: #a21caf;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 1em 0;
+            font-size: 1.1em;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 1.5em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .submit-btn:hover {
+            background: #7c1c7c;
+        }
+        .success-message {
+            color: #22c55e;
+            text-align: center;
+            margin-top: 1em;
+        }
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 1em;
+        }
+        @media (max-width: 900px) {
+            .lecturer-form-row {
+                flex-direction: column;
+                gap: 0.5em;
+            }
+        }
+    </style>
+    <script src="../auth.js"></script>
+</head>
+<body>
+    <div style="max-width: 1100px; margin: 20px auto 0 auto; text-align: left;">
+        <a href="index.html" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: #a21caf; font-weight: bold; font-size: 1em; margin-bottom: 20px;">
+            <span style="font-size: 1.2em;">&#8592;</span> Back to Dashboard
+        </a>
+    </div>
+    <div class="add-lecturer-container">
+        <div class="add-lecturer-header">
+            <div class="icon">&#128104;&#8205;&#127979;</div>
+            <h2>Add New Lecturer</h2>
+        </div>
+        <div class="add-lecturer-desc">
+            Enter lecturer information to add them to the system
+        </div>
+        <form id="addLecturerForm">
+            <div class="lecturer-form-row">
+                <div class="form-group">
+                    <label for="lecturerName">Full Name</label>
+                    <input type="text" id="lecturerName" name="name" placeholder="Enter full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="lecturerEmail">Email</label>
+                    <input type="email" id="lecturerEmail" name="user_id" placeholder="lecturer@gctu.edu.gh" required>
+                </div>
+            </div>
+            <div class="lecturer-form-row">
+                <div class="form-group">
+                    <label for="lecturerDept">Department</label>
+                    <select id="lecturerDept" name="department" required>
+                        <option value="">Select department</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Business Administration">Business Administration</option>
+                        <option value="Engineering">Engineering</option>
+                        <!-- Add more as needed -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="lecturerPosition">Position</label>
+                    <select id="lecturerPosition" name="position" required>
+                        <option value="">Select position</option>
+                        <option value="Professor">Professor</option>
+                        <option value="Associate Professor">Associate Professor</option>
+                        <option value="Senior Lecturer">Senior Lecturer</option>
+                        <option value="Lecturer">Lecturer</option>
+                        <option value="Assistant Lecturer">Assistant Lecturer</option>
+                        <!-- Add more as needed -->
+                    </select>
+                </div>
+            </div>
+            <div class="lecturer-form-row">
+                <div class="form-group" style="flex:2;">
+                    <label for="lecturerPassword">Password</label>
+                    <input type="password" id="lecturerPassword" name="password" placeholder="Enter password" value="lecture@gctu" required>
+                </div>
+            </div>
+            <div class="courses-section">
+                <label>Courses Teaching</label>
+                <div class="add-course-row">
+                    <input type="text" id="courseInput" placeholder="Enter course code (e.g., CS101)">
+                    <button type="button" class="add-course-btn" onclick="addCourse()">&#43;</button>
+                </div>
+                <div class="courses-list" id="coursesList">
+                    <!-- Courses will be listed here -->
+                </div>
+            </div>
+            <button type="submit" class="submit-btn">Add Lecturer</button>
+            <div id="lecturerMsg"></div>
+        </form>
+    </div>
+    <script>
+    let courses = [];
+
+    function addCourse() {
+        const input = document.getElementById('courseInput');
+        const val = input.value.trim();
+        if (val && !courses.includes(val)) {
+            courses.push(val);
+            updateCoursesList();
+            input.value = '';
+        }
+    }
+
+    function updateCoursesList() {
+        const coursesList = document.getElementById('coursesList');
+        if (courses.length === 0) {
+            coursesList.textContent = '';
+        } else {
+            coursesList.textContent = courses.join(', ');
+        }
+    }
+
+    document.getElementById('addLecturerForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const data = {
+            name: this.name.value.trim(),
+            user_id: this.user_id.value.trim(),
+            email: this.user_id.value.trim(),
+            department: this.department.value,
+            password: this.password.value,
+            role: 'lecturer',
+            courses: courses
+        };
+        // Send to backend
+        try {
+            const res = await auth.authenticatedRequest('http://localhost:5000/register', {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+            const result = await res.json();
+            const msgDiv = document.getElementById('lecturerMsg');
+            if (result.status === 'success') {
+                msgDiv.innerHTML = '<div class="success-message">Lecturer added successfully!</div>';
+                this.reset();
+                courses = [];
+                updateCoursesList();
+            } else {
+                msgDiv.innerHTML = '<div class="error-message">' + result.message + '</div>';
+            }
+        } catch (error) {
+            document.getElementById('lecturerMsg').innerHTML = '<div class="error-message">Network error. Please try again.</div>';
+        }
+    };
+    </script>
+</body>
+</html>

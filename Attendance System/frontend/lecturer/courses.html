@@ -1,0 +1,162 @@
+<!-- Example: c:\Users\akpeh\OneDrive\Documents\Attendance System\frontend\lecturer\students.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Courses - GCTU Attendance System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .courses-section {
+            margin: 2em;
+        }
+        .courses-section h2 {
+            color: #6c63ff;
+            margin-bottom: 1em;
+        }
+        .courses-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 16px rgba(44,62,80,0.08);
+        }
+        .courses-table th, .courses-table td {
+            padding: 1em;
+            border: 1px solid #eee;
+            text-align: left;
+        }
+        .courses-table th {
+            background: #f5f6fa;
+        }
+        .courses-table tr:nth-child(even) {
+            background: #fafbff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="../../gctu logo.png" alt="School Logo">
+                <h2>GCTU Attendance</h2>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="students.html"><i class="fas fa-user-graduate"></i> Students</a></li>
+                    <li><a href="attendance.html"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+                    <li class="active"><a href="courses.html"><i class="fas fa-book"></i> Courses</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </div>
+            <div class="help-support">
+                <h3>Help & Support</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                    <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="courses-section">
+                <h2>Courses Currently Teaching</h2>
+                <!-- Bar Chart -->
+                <div style="background:#fff; border-radius:16px; box-shadow:0 2px 16px rgba(44,62,80,0.08); padding:2em; margin-bottom:2em;">
+                    <canvas id="coursesBarChart" height="120"></canvas>
+                </div>
+                <table class="courses-table">
+                    <thead>
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Course Name</th>
+                            <th>Program</th>
+                            <th>Level</th>
+                            <th>Enrolled Students</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CSC201</td>
+                            <td>Data Structures</td>
+                            <td>BSc Computer Science</td>
+                            <td>200</td>
+                            <td>120</td>
+                        </tr>
+                        <tr>
+                            <td>CSC301</td>
+                            <td>Database Systems</td>
+                            <td>BSc Computer Science</td>
+                            <td>300</td>
+                            <td>98</td>
+                        </tr>
+                        <tr>
+                            <td>ENG205</td>
+                            <td>Digital Logic Design</td>
+                            <td>BEng Electrical</td>
+                            <td>200</td>
+                            <td>85</td>
+                        </tr>
+                        <tr>
+                            <td>MTH102</td>
+                            <td>Calculus II</td>
+                            <td>BSc Mathematics</td>
+                            <td>100</td>
+                            <td>110</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Data for the bar chart
+        const courseLabels = [
+            'CSC201 - Data Structures',
+            'CSC301 - Database Systems',
+            'ENG205 - Digital Logic Design',
+            'MTH102 - Calculus II'
+        ];
+        const enrolledStudents = [120, 98, 85, 110];
+
+        const ctx = document.getElementById('coursesBarChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: courseLabels,
+                datasets: [{
+                    label: 'Enrolled Students',
+                    data: enrolledStudents,
+                    backgroundColor: [
+                        '#6c63ff', '#27ae60', '#a259e6', '#f39c12'
+                    ],
+                    borderRadius: 8,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 20 }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

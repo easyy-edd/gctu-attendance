@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bulk Upload - Admin Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #f6f7fb;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .bulk-upload-container {
+            max-width: 1200px;
+            margin: 40px auto 0 auto;
+            display: flex;
+            gap: 2em;
+            justify-content: center;
+        }
+        .upload-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.10);
+            padding: 2em 2em 1.5em 2em;
+            flex: 1;
+            min-width: 340px;
+            display: flex;
+            flex-direction: column;
+        }
+        .upload-header {
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            margin-bottom: 0.2em;
+        }
+        .upload-header .icon {
+            background: #ff5722;
+            color: #fff;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+        }
+        .upload-header.lecturer .icon {
+            background: #06b6d4;
+        }
+        .upload-header h2 {
+            margin: 0;
+            font-size: 1.15em;
+            font-weight: 600;
+            color: #222;
+        }
+        .upload-desc {
+            color: #888;
+            font-size: 1em;
+            margin-bottom: 1.5em;
+        }
+        .template-row {
+            margin-bottom: 1em;
+        }
+        .template-btn {
+            background: #f6f7fb;
+            color: #222;
+            border: 1px solid #ececff;
+            border-radius: 8px;
+            padding: 0.7em 1.5em;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .template-btn:hover {
+            background: #ececff;
+        }
+        .upload-file-row {
+            margin-bottom: 1.2em;
+        }
+        .upload-file-row input[type="file"] {
+            width: 100%;
+            padding: 0.7em;
+            border-radius: 8px;
+            border: 1px solid #ececff;
+            background: #f8f9fc;
+            font-size: 1em;
+        }
+        .upload-btn {
+            background: #a78bfa;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 1em 0;
+            font-size: 1.1em;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 1em;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5em;
+        }
+        .upload-btn:hover {
+            background: #7c3aed;
+        }
+        .upload-btn.lecturer {
+            background: #06b6d4;
+        }
+        .upload-btn.lecturer:hover {
+            background: #0e7490;
+        }
+        .note {
+            color: #888;
+            font-size: 0.98em;
+            margin-top: 1em;
+        }
+        @media (max-width: 900px) {
+            .bulk-upload-container {
+                flex-direction: column;
+                gap: 1.5em;
+            }
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1em;
+            margin: 2em 0;
+        }
+        .tab-btn {
+            background: #fff;
+            color: #222;
+            padding: 0.7em 1.5em;
+            border: 1px solid #ececff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .tab-btn:hover {
+            background: #f6f7fb;
+        }
+    </style>
+</head>
+<body>
+    <div class="tabs">
+        <a href="index.html" class="tab-btn">Students</a>
+        <a href="lecturers.html" class="tab-btn">Lecturers</a>
+        <button onclick="window.location.href='bulk-upload.html'" class="tab-btn">Bulk Upload</button>
+    </div>
+    <div class="bulk-upload-container">
+        <div class="upload-card">
+            <div class="upload-header">
+                <div class="icon">&#128227;</div>
+                <h2>Upload Students</h2>
+            </div>
+            <div class="upload-desc">
+                Bulk upload student data using Excel files
+            </div>
+            <div class="template-row">
+                <a href="students-template.xlsx" class="template-btn" download>
+                    <span>&#8681;</span> Download students Template
+                </a>
+            </div>
+            <form id="studentUploadForm" enctype="multipart/form-data">
+                <div class="upload-file-row">
+                    <input type="file" name="file" accept=".xlsx,.xls" required>
+                </div>
+                <button type="submit" class="upload-btn">
+                    <span>&#8682;</span> Upload students
+                </button>
+                <div id="studentUploadMsg"></div>
+            </form>
+            <div class="note">
+                Note: Make sure your Excel file follows the template format exactly.<br>
+                Courses should be comma-separated (e.g., CS101,CS102,MATH201)
+            </div>
+        </div>
+        <div class="upload-card">
+            <div class="upload-header lecturer">
+                <div class="icon">&#128218;</div>
+                <h2>Upload Lecturers</h2>
+            </div>
+            <div class="upload-desc">
+                Bulk upload lecturer data using Excel files
+            </div>
+            <div class="template-row">
+                <a href="lecturers-template.xlsx" class="template-btn" download>
+                    <span>&#8681;</span> Download lecturers Template
+                </a>
+            </div>
+            <form id="lecturerUploadForm" enctype="multipart/form-data">
+                <div class="upload-file-row">
+                    <input type="file" name="file" accept=".xlsx,.xls" required>
+                </div>
+                <button type="submit" class="upload-btn lecturer">
+                    <span>&#8682;</span> Upload lecturers
+                </button>
+                <div id="lecturerUploadMsg"></div>
+            </form>
+            <div class="note">
+                Note: Make sure your Excel file follows the template format exactly.<br>
+                Courses should be comma-separated (e.g., CS101,CS102,MATH201)
+            </div>
+        </div>
+    </div>
+    <script>
+    // Student upload
+    document.getElementById('studentUploadForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const msg = document.getElementById('studentUploadMsg');
+        msg.textContent = '';
+        const formData = new FormData(this);
+        try {
+            const res = await fetch('/bulk-upload/students', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await res.json();
+            if (result.status === 'success') {
+                msg.textContent = 'Students uploaded successfully!';
+                msg.style.color = '#22c55e';
+                this.reset();
+            } else {
+                msg.textContent = result.message || 'Failed to upload students.';
+                msg.style.color = '#e74c3c';
+            }
+        } catch (err) {
+            msg.textContent = 'Network error. Please try again.';
+            msg.style.color = '#e74c3c';
+        }
+    };
+    // Lecturer upload
+    document.getElementById('lecturerUploadForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const msg = document.getElementById('lecturerUploadMsg');
+        msg.textContent = '';
+        const formData = new FormData(this);
+        try {
+            const res = await fetch('/bulk-upload/lecturers', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await res.json();
+            if (result.status === 'success') {
+                msg.textContent = 'Lecturers uploaded successfully!';
+                msg.style.color = '#22c55e';
+                this.reset();
+            } else {
+                msg.textContent = result.message || 'Failed to upload lecturers.';
+                msg.style.color = '#e74c3c';
+            }
+        } catch (err) {
+            msg.textContent = 'Network error. Please try again.';
+            msg.style.color = '#e74c3c';
+        }
+    };
+    </script>
+</body>
+</html>

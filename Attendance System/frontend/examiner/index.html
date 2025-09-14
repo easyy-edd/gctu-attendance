@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examiner Portal - Attendance System</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="../../../gctu logo.png" alt="School Logo">
+                <h2>GCTU Attendance</h2>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li class="active"><a href="index.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="#"><i class="fas fa-qrcode"></i> Exam Scanning</a></li>
+                    <li><a href="#"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </div>
+            <div class="help-support">
+                <h3>Help & Support</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                    <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Examiner Portal - Exam Attendance</h1>
+            </div>
+    <div class="selection-row">
+        <select id="facultySelect">
+            <option value="">Select Faculty</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Computing">Computing</option>
+        </select>
+        <select id="departmentSelect">
+            <option value="">Select Department</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Electrical Engineering">Electrical Engineering</option>
+        </select>
+        <select id="programSelect">
+            <option value="">Select Program</option>
+            <option value="BSc Computer Science">BSc Computer Science</option>
+            <option value="BEng Electrical">BEng Electrical</option>
+        </select>
+        <select id="courseSelect">
+            <option value="">Select Course</option>
+            <option value="CSC201">Data Structures</option>
+            <option value="CSC301">Database Systems</option>
+            <option value="ENG205">Digital Logic Design</option>
+            <option value="MTH102">Calculus II</option>
+        </select>
+        <select id="levelSelect">
+            <option value="">Select Level</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+            <option value="300">300</option>
+            <option value="400">400</option>
+        </select>
+    </div>
+    <button id="initiateScanBtn">Initiate Attendance Scanning</button>
+    <div id="scanner">
+        <video id="video" width="320" height="240" autoplay style="display:none;"></video>
+        <canvas id="canvas" width="320" height="240" style="display:none;"></canvas>
+        <span id="scanMsg" style="color:#fff;">Camera not started</span>
+    </div>
+    <h2>Exam Attendance Overview</h2>
+    <table id="liveAttendanceTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Index Number</th>
+                <th>Time Marked</th>
+            </tr>
+        </thead>
+        <tbody id="attendanceFeed">
+            <!-- Live attendance will appear here -->
+        </tbody>
+    </table>
+        </div>
+    </div>
+
+    <script src="../auth.js"></script>
+    <script src="../database-client.js"></script>
+    <script>
+        const scanBtn = document.getElementById('initiateScanBtn');
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const scanMsg = document.getElementById('scanMsg');
+        const attendanceFeed = document.getElementById('attendanceFeed');
+        let scanning = false;
+
+        // Store live attendance
+        const attendanceList = [];
+
+        // Load students from database
+        async function loadStudents() {
+            try {
+                const response = await fetch('http://localhost:5000/users/by-role', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success' && result.users_by_role.students) {
+                    // Store students data for lookup
+                    window.studentsDB = {};
+                    result.users_by_role.students.forEach(student => {
+                        window.studentsDB[student.user_id] = {
+                            name: student.name,
+                            index: student.user_id
+                        };
+                    });
+                } else {
+                    console.error('Error loading students:', result.message);
+                    // Fallback to mock data
+                    loadMockStudents();
+                }
+            } catch (error) {
+                console.error('Error loading students:', error);
+                loadMockStudents();
+            }
+        }
+
+        // Fallback mock students
+        function loadMockStudents() {
+            window.studentsDB = {
+                "S001": { name: "John Smith", index: "S001" },
+                "S002": { name: "Sarah Johnson", index: "S002" },
+                "S003": { name: "Michael Brown", index: "S003" }
+            };
+        }
+
+        scanBtn.onclick = async function() {
+            if (scanning) return;
+            // Validate selection
+            const faculty = document.getElementById('facultySelect').value;
+            const department = document.getElementById('departmentSelect').value;
+            const program = document.getElementById('programSelect').value;
+            const course = document.getElementById('courseSelect').value;
+            const level = document.getElementById('levelSelect').value;
+            if (!faculty || !department || !program || !course || !level) {
+                alert("Please select Faculty, Department, Program, Course, and Level before scanning.");
+                return;
+            }
+            scanning = true;
+            scanMsg.textContent = "Starting camera...";
+            video.style.display = "block";
+            scanMsg.style.display = "none";
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                scanMsg.textContent = "Point student ID at the camera";
+                // Simulate scanning by clicking on video (for demo)
+                video.onclick = function() {
+                    // Simulate a scan (random student)
+                    const ids = Object.keys(window.studentsDB);
+                    const randomId = ids[Math.floor(Math.random() * ids.length)];
+                    recordAttendance(randomId);
+                };
+            } catch (e) {
+                scanMsg.textContent = "Camera access denied or unavailable.";
+                video.style.display = "none";
+            }
+        };
+
+        function recordAttendance(studentId) {
+            const student = window.studentsDB[studentId];
+            if (!student) return;
+            // Prevent duplicate
+            if (attendanceList.find(a => a.index === student.index)) return;
+            const now = new Date();
+            attendanceList.push({
+                name: student.name,
+                index: student.index,
+                time: now.toLocaleTimeString()
+            });
+            updateAttendanceFeed();
+        }
+
+        function updateAttendanceFeed() {
+            attendanceFeed.innerHTML = "";
+            attendanceList.forEach(a => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${a.name}</td><td>${a.index}</td><td>${a.time}</td>`;
+                attendanceFeed.appendChild(tr);
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStudents();
+        });
+    </script>
+</body>
+</html>

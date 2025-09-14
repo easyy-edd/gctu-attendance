@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheduled Attendance & Timetable</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #f4f6fb;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 2em auto 2em 270px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 16px rgba(44,62,80,0.08);
+            padding: 2em;
+            display: flex;
+            flex-direction: column;
+            gap: 2em;
+        }
+        h1 {
+            color: #6c63ff;
+            text-align: center;
+            margin-bottom: 1.5em;
+        }
+        .attendance-list {
+            margin-bottom: 2em;
+        }
+        .attendance-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f5f6fa;
+            border-radius: 8px;
+            padding: 1em 1.5em;
+            margin-bottom: 1em;
+        }
+        .attendance-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .attendance-info span {
+            font-size: 1em;
+            color: #333;
+        }
+        .attendance-info small {
+            color: #888;
+        }
+        .record-btn {
+            background: #6c63ff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.6em 1.2em;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .record-btn:hover {
+            background: #554fd8;
+        }
+        #scannerModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        #scannerBox {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2em;
+            box-shadow: 0 2px 16px rgba(44,62,80,0.12);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 320px;
+        }
+        #scannerBox h2 {
+            color: #6c63ff;
+            margin-bottom: 1em;
+        }
+        #scanner {
+            width: 320px;
+            height: 240px;
+            background: #222;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1em;
+            overflow: hidden;
+        }
+        #scanner video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #closeScanner {
+            margin-top: 1em;
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5em 1.2em;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        /* Timetable styles */
+        .timetable-section {
+            margin-bottom: 2em;
+        }
+        .timetable-section h2 {
+            color: #6c63ff;
+            margin-bottom: 1em;
+        }
+        .timetable-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.05);
+        }
+        .timetable-table th, .timetable-table td {
+            padding: 1em;
+            text-align: left;
+        }
+        .timetable-table th {
+            background: #f5f6fa;
+            color: #333;
+            font-size: 1.05em;
+        }
+        .timetable-table tr:nth-child(even) {
+            background: #fafbff;
+        }
+        .timetable-table tr:hover {
+            background: #f0f4ff;
+        }
+        /* Calendar styles */
+        .calendar-section {
+            margin-bottom: 2em;
+        }
+        .calendar-section h2 {
+            color: #6c63ff;
+            margin-bottom: 1em;
+        }
+        .calendar-container {
+            background: #f5f6fa;
+            border-radius: 12px;
+            padding: 1em;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.05);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        .calendar-table th, .calendar-table td {
+            padding: 0.7em;
+            font-size: 1em;
+        }
+        .calendar-table th {
+            color: #6c63ff;
+        }
+        .calendar-table td.today {
+            background: #6c63ff;
+            color: #fff;
+            border-radius: 50%;
+        }
+        @media (max-width: 1200px) {
+            .container {
+                margin: 2em 1em 2em 230px;
+            }
+        }
+        @media (max-width: 900px) {
+            .container {
+                margin: 2em 0.5em;
+                padding: 1em;
+            }
+        }
+        @media (max-width: 700px) {
+            .container {
+                margin: 90px 0.2em 2em 0.2em;
+                padding: 0.5em;
+            }
+            .sidebar {
+                position: static !important;
+                width: 100% !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                padding: 1em !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar navigation -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="../../gctu logo.png" alt="School Logo">
+            <h2>GCTU Attendance</h2>
+        </div>
+        <div class="menu">
+            <ul>
+                <li><a href="index.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                <li><a href="timetable.html" class="active"><i class="fas fa-calendar-alt"></i> Timetable</a></li>
+                <li><a href="my_attendance.html"><i class="fas fa-check-circle"></i> My Attendance</a></li>
+                <li><a href="my_course.html"><i class="fas fa-user"></i> Profile</a></li>
+            </ul>
+        </div>
+        <div class="help-support">
+            <h3>Help & Support</h3>
+            <ul>
+                <li><a href="#"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Scheduled Attendance</h1>
+        <div class="attendance-list" id="attendanceList">
+            <!-- Example scheduled attendance items -->
+            <div class="attendance-item" data-method="qr" data-course="Data Structures" data-id="1">
+                <div class="attendance-info">
+                    <span>Data Structures (CSC201)</span>
+                    <small>Date: 2025-08-10 | Time: 09:00 AM | Method: QR Code</small>
+                </div>
+                <button class="record-btn" onclick="openScanner('qr', 'Data Structures')">Record Attendance</button>
+            </div>
+            <div class="attendance-item" data-method="id" data-course="Database Systems" data-id="2">
+                <div class="attendance-info">
+                    <span>Database Systems (CSC301)</span>
+                    <small>Date: 2025-08-11 | Time: 11:00 AM | Method: Student ID</small>
+                </div>
+                <button class="record-btn" onclick="openScanner('id', 'Database Systems')">Record Attendance</button>
+            </div>
+            <!-- Add more scheduled attendance as needed -->
+        </div>
+
+        <!-- Timetable Section -->
+        <div class="timetable-section">
+            <h2><i class="fas fa-table"></i> Class Timetable</h2>
+            <table class="timetable-table">
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Time</th>
+                        <th>Course</th>
+                        <th>Venue</th>
+                        <th>Lecturer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Monday</td>
+                        <td>08:00 - 10:00</td>
+                        <td>Data Structures</td>
+                        <td>Room 203, Block A</td>
+                        <td>Dr. John Doe</td>
+                    </tr>
+                    <tr>
+                        <td>Tuesday</td>
+                        <td>11:00 - 13:00</td>
+                        <td>Database Systems</td>
+                        <td>Room 105, Block B</td>
+                        <td>Dr. Jane Smith</td>
+                    </tr>
+                    <tr>
+                        <td>Wednesday</td>
+                        <td>14:00 - 16:00</td>
+                        <td>Calculus II</td>
+                        <td>Lab 3, Block C</td>
+                        <td>Prof. Kwame Mensah</td>
+                    </tr>
+                    <tr>
+                        <td>Thursday</td>
+                        <td>10:00 - 12:00</td>
+                        <td>Digital Logic Design</td>
+                        <td>Room 210, Block D</td>
+                        <td>Dr. Samuel Boateng</td>
+                    </tr>
+                    <tr>
+                        <td>Friday</td>
+                        <td>09:00 - 11:00</td>
+                        <td>English 101</td>
+                        <td>Room 101, Block E</td>
+                        <td>Ms. Akua Mensah</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Calendar Section -->
+        <div class="calendar-section">
+            <h2><i class="fas fa-calendar"></i> Calendar</h2>
+            <div class="calendar-container">
+                <table class="calendar-table" id="calendarTable">
+                    <!-- Calendar will be generated by JS -->
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scanner Modal -->
+    <div id="scannerModal">
+        <div id="scannerBox">
+            <h2 id="scannerTitle">Scan to Record Attendance</h2>
+            <div id="scanner">
+                <video id="video" autoplay style="display:none;"></video>
+                <span id="scanMsg" style="color:#fff;">Camera not started</span>
+            </div>
+            <button id="closeScanner" onclick="closeScannerModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function openScanner(method, course) {
+            document.getElementById('scannerModal').style.display = 'flex';
+            document.getElementById('scannerTitle').textContent = 
+                method === 'qr' ? `Scan QR Code for ${course}` : `Scan Student ID for ${course}`;
+            startCamera();
+        }
+
+        function closeScannerModal() {
+            document.getElementById('scannerModal').style.display = 'none';
+            stopCamera();
+        }
+
+        // Camera logic (demo: click video to simulate scan)
+        const video = document.getElementById('video');
+        const scanMsg = document.getElementById('scanMsg');
+        let stream = null;
+
+        async function startCamera() {
+            scanMsg.textContent = "Starting camera...";
+            scanMsg.style.display = "block";
+            video.style.display = "none";
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                video.style.display = "block";
+                scanMsg.style.display = "none";
+                // Demo: simulate scan by clicking video
+                video.onclick = function() {
+                    alert("Attendance recorded successfully!");
+                    closeScannerModal();
+                };
+            } catch (e) {
+                scanMsg.textContent = "Camera access denied or unavailable.";
+                video.style.display = "none";
+            }
+        }
+
+        function stopCamera() {
+            if (stream) {
+                let tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+                stream = null;
+            }
+            video.style.display = "none";
+            scanMsg.style.display = "block";
+            scanMsg.textContent = "Camera not started";
+        }
+
+        // Simple JS Calendar
+        function generateCalendar() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = today.getMonth();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const calendarTable = document.getElementById('calendarTable');
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            let html = '<tr>';
+            for (let d of days) html += `<th>${d}</th>`;
+            html += '</tr><tr>';
+            for (let i = 0; i < firstDay; i++) html += '<td></td>';
+            for (let day = 1; day <= daysInMonth; day++) {
+                const isToday = day === today.getDate();
+                html += `<td class="${isToday ? 'today' : ''}">${day}</td>`;
+                if ((firstDay + day) % 7 === 0) html += '</tr><tr>';
+            }
+            html += '</tr>';
+            calendarTable.innerHTML = html;
+        }
+        generateCalendar();
+    </script>
+</body>
+</html>

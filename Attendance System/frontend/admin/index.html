@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - GCTU Attendance System</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="topbar">
+        <div class="logo-area">
+            <a href="javascript:history.back()" style="color:#6c63ff;font-weight:bold;font-size:1.2em;text-decoration:none;margin-right:1em;">&#8592; Back</a>
+            <img src="../../gctu logo.png" alt="GCTU Logo">
+            <div class="title-area">
+                <h1>GCTU Attendance</h1>
+                <span>Ghana Communication Technology University</span>
+            </div>
+        </div>
+        <div class="role-switch">
+            <button class="role-btn active"><i class="fas fa-user"></i> Student</button>
+            <button class="role-btn"><i class="fas fa-calendar"></i> Lecturer</button>
+        </div>
+        <div class="nav-btns">
+            <button class="nav-btn home" onclick="window.location.href='index.html'"><i class="fas fa-home"></i> Home</button>
+            <button class="nav-btn logout" onclick="auth.logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+    </div>
+    <div class="dashboard-header">
+        <h2><i class="fas fa-shield-alt"></i> Admin Dashboard</h2>
+        <p>Manage users across all portals efficiently</p>
+    </div>
+    
+    <!-- Stats Section -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number" id="totalUsers">0</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalStudents">0</div>
+            <div class="stat-label">Students</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalLecturers">0</div>
+            <div class="stat-label">Lecturers</div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-section">
+        <button class="add-user-btn" onclick="window.location.href='add-student.html'">+ Add Student</button>
+        <button class="add-user-btn" onclick="window.location.href='add-lecturer.html'">+ Add Lecturer</button>
+        <button class="upload-btn" onclick="window.location.href='bulk-upload.html'">+ 📁 Bulk Upload</button>
+        <button class="db-btn" onclick="window.location.href='view-database.html'">View Database</button>
+    </div>
+
+    <div class="admin-main">
+        <!-- Students Portal Section -->
+        <div class="portal-section">
+            <div class="portal-header">
+                <h3><i class="fas fa-graduation-cap"></i> Student Portal Users</h3>
+                <span class="user-count" id="studentCount">0 users</span>
+            </div>
+            <div class="users-container" id="studentsContainer">
+                <div class="loading-message">Loading students...</div>
+            </div>
+        </div>
+
+        <!-- Lecturers Portal Section -->
+        <div class="portal-section">
+            <div class="portal-header">
+                <h3><i class="fas fa-chalkboard-teacher"></i> Lecturer Portal Users</h3>
+                <span class="user-count" id="lecturerCount">0 users</span>
+            </div>
+            <div class="users-container" id="lecturersContainer">
+                <div class="loading-message">Loading lecturers...</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Add User Modal -->
+    <div id="addUserModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New User</h2>
+            <form id="addUserForm">
+                <div class="form-group">
+                    <label for="userId">User ID</label>
+                    <input type="text" id="userId" required placeholder="Enter user ID">
+                </div>
+                <div class="form-group">
+                    <label for="userName">Full Name</label>
+                    <input type="text" id="userName" required placeholder="Enter full name">
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Email</label>
+                    <input type="email" id="userEmail" required placeholder="Enter email address">
+                </div>
+                <div class="form-group">
+                    <label for="userRole">Role</label>
+                    <select id="userRole" required onchange="toggleRoleFields()">
+                        <option value="">Select role</option>
+                        <option value="student">Student</option>
+                        <option value="lecturer">Lecturer</option>
+                    </select>
+                </div>
+
+                <!-- Student-specific fields -->
+                <div id="studentFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="studentLevel">Level</label>
+                        <select id="studentLevel">
+                            <option value="">Select level</option>
+                            <option value="100">100</option>
+                            <option value="200">200</option>
+                            <option value="300">300</option>
+                            <option value="400">400</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentProgram">Program</label>
+                        <input type="text" id="studentProgram" placeholder="e.g., Computer Science">
+                    </div>
+                </div>
+
+                <!-- Lecturer-specific fields -->
+                <div id="lecturerFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="lecturerDepartment">Department</label>
+                        <input type="text" id="lecturerDepartment" placeholder="e.g., Computer Science">
+                    </div>
+                    <div class="form-group">
+                        <label for="lecturerCourses">Courses (comma-separated)</label>
+                        <input type="text" id="lecturerCourses" placeholder="e.g., CSC 101, CSC 102">
+                    </div>
+                    <div class="form-group">
+                        <label for="lecturerLevels">Levels (comma-separated)</label>
+                        <input type="text" id="lecturerLevels" placeholder="e.g., 100, 200">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="userPassword">Password</label>
+                    <input type="password" id="userPassword" required placeholder="Enter password">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="hideAddUserModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Add User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bulk Upload Modal -->
+    <div id="bulkUploadModal" class="modal">
+        <div class="modal-content">
+            <h2>Bulk Upload Users</h2>
+            <form id="bulkUploadForm">
+                <div class="form-group">
+                    <label for="uploadFile">Select File</label>
+                    <input type="file" id="uploadFile" accept=".xlsx,.csv" required>
+                </div>
+                <div class="form-group">
+                    <label for="uploadRole">Default Role (if not specified in file)</label>
+                    <select id="uploadRole">
+                        <option value="">Use file data</option>
+                        <option value="student">Student</option>
+                        <option value="lecturer">Lecturer</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="hideBulkUploadModal()">Cancel</button>
+                    <button type="submit" class="btn-save" id="uploadBtn">Upload & Import</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let allUsers = {};
+
+        // Modal functions
+        function showAddUserModal() {
+            document.getElementById('addUserModal').style.display = 'flex';
+            document.getElementById('addUserForm').reset();
+        }
+        
+        function hideAddUserModal() {
+            document.getElementById('addUserModal').style.display = 'none';
+        }
+        
+        function showBulkUploadModal() {
+            document.getElementById('bulkUploadModal').style.display = 'flex';
+            document.getElementById('bulkUploadForm').reset();
+        }
+        
+        function hideBulkUploadModal() {
+            document.getElementById('bulkUploadModal').style.display = 'none';
+        }
+
+        // Toggle role-specific fields
+        function toggleRoleFields() {
+            const role = document.getElementById('userRole').value;
+            const studentFields = document.getElementById('studentFields');
+            const lecturerFields = document.getElementById('lecturerFields');
+
+            // Hide all role-specific fields first
+            studentFields.style.display = 'none';
+            lecturerFields.style.display = 'none';
+
+            // Show fields based on selected role
+            if (role === 'student') {
+                studentFields.style.display = 'block';
+            } else if (role === 'lecturer') {
+                lecturerFields.style.display = 'block';
+            }
+        }
+
+        // Load users by role
+        async function loadUsersByRole() {
+            try {
+                const response = await fetch('http://localhost:5000/users/by-role', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    allUsers = result.users_by_role;
+                    displayUsersByRole(result.users_by_role);
+                    updateStats(result.stats);
+                } else {
+                    console.error('Error loading users:', result.message);
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        // Display users organized by role
+        function displayUsersByRole(usersByRole) {
+            displayRoleUsers('students', usersByRole.students, 'studentsContainer', 'studentCount');
+            displayRoleUsers('lecturers', usersByRole.lecturers, 'lecturersContainer', 'lecturerCount');
+        }
+
+        // Display users for a specific role
+        function displayRoleUsers(role, users, containerId, countId) {
+            const container = document.getElementById(containerId);
+            const countElement = document.getElementById(countId);
+            
+            countElement.textContent = `${users.length} user${users.length !== 1 ? 's' : ''}`;
+
+            if (users.length === 0) {
+                container.innerHTML = `<div class="no-users">No ${role} found</div>`;
+                return;
+            }
+
+            const usersHtml = users.map(user => `
+                <div class="user-card">
+                    <div class="user-info">
+                        <div class="user-header">
+                            <h4>${user.name}</h4>
+                            <span class="user-id">${user.user_id}</span>
+                        </div>
+                        <div class="user-details">
+                            <p><strong>Email:</strong> ${user.email}</p>
+                            ${user.role === 'student' ? `
+                                <p><strong>Level:</strong> ${user.level || 'N/A'}</p>
+                                <p><strong>Program:</strong> ${user.program || 'N/A'}</p>
+                            ` : ''}
+                            ${user.role === 'lecturer' ? `
+                                <p><strong>Department:</strong> ${user.department || 'N/A'}</p>
+                                <p><strong>Courses:</strong> ${user.courses ? user.courses.join(', ') : 'N/A'}</p>
+                                <p><strong>Levels:</strong> ${user.levels ? user.levels.join(', ') : 'N/A'}</p>
+                            ` : ''}
+                            <p><strong>Created:</strong> ${new Date(user.created_at).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn-edit" onclick="editUser('${user.user_id}')">Edit</button>
+                        <button class="btn-delete" onclick="deleteUser('${user.user_id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = usersHtml;
+        }
+
+        // Update statistics
+        function updateStats(stats) {
+            // Only count students and lecturers for total users
+            const totalDisplayedUsers = stats.total_students + stats.total_lecturers;
+            document.getElementById('totalUsers').textContent = totalDisplayedUsers;
+            document.getElementById('totalStudents').textContent = stats.total_students;
+            document.getElementById('totalLecturers').textContent = stats.total_lecturers;
+        }
+
+        // Add user form submission
+        document.getElementById('addUserForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const role = document.getElementById('userRole').value;
+            const formData = {
+                user_id: document.getElementById('userId').value,
+                name: document.getElementById('userName').value,
+                email: document.getElementById('userEmail').value,
+                role: role,
+                password: document.getElementById('userPassword').value
+            };
+
+            // Add role-specific data
+            if (role === 'student') {
+                formData.level = parseInt(document.getElementById('studentLevel').value);
+                formData.program = document.getElementById('studentProgram').value;
+            } else if (role === 'lecturer') {
+                formData.department = document.getElementById('lecturerDepartment').value;
+                formData.courses = document.getElementById('lecturerCourses').value.split(',').map(course => course.trim()).filter(course => course);
+                formData.levels = document.getElementById('lecturerLevels').value.split(',').map(level => parseInt(level.trim())).filter(level => !isNaN(level));
+            }
+
+            try {
+                console.log('DEBUG: Token used for addUser:', auth.getToken());
+                const response = await auth.authenticatedRequest('http://localhost:5000/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    alert('User added successfully!');
+                    hideAddUserModal();
+                    loadUsersByRole(); // Refresh the users display
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error adding user:', error);
+                alert('An error occurred while adding the user.');
+            }
+        });
+
+        // Delete user function
+        async function deleteUser(userId) {
+            if (!confirm(`Are you sure you want to delete user ${userId}?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/users/${userId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    alert('User deleted successfully!');
+                    loadUsersByRole(); // Refresh the users display
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                alert('An error occurred while deleting the user.');
+            }
+        }
+
+        // Edit user function (placeholder)
+        function editUser(userId) {
+            alert('Edit functionality coming soon for user: ' + userId);
+        }
+
+        // Load users on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUsersByRole();
+        });
+
+        // Example for add-lecturer.html
+        document.getElementById('addLecturerForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const data = {
+                name: this.name.value.trim(),
+                user_id: this.user_id.value.trim(),
+                email: this.user_id.value.trim(),
+                department: this.department.value,
+                position: this.position.value,
+                password: this.password.value,
+                role: 'lecturer',
+                courses: courses // from your JS array
+            };
+            const res = await fetch('/register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+            // Handle response...
+        };
+    </script>
+    <script src="../auth.js"></script>
+    <script src="../database-client.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

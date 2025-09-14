@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Overview</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: #f4f6fb;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .main-content {
+            flex: 1;
+            margin: 24px 24px 24px 250px;
+            padding-bottom: 2em;
+        }
+        .overview-cards {
+            display: flex;
+            gap: 2em;
+            margin-bottom: 2.5em;
+            flex-wrap: wrap;
+        }
+        .overview-card {
+            background: linear-gradient(135deg, #e9eafc 60%, #fff 100%);
+            border-radius: 14px;
+            box-shadow: 0 2px 16px rgba(44,62,80,0.08);
+            padding: 2em 2em;
+            flex: 1 1 220px;
+            min-width: 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: box-shadow 0.2s, transform 0.2s;
+            cursor: pointer;
+            border: 1px solid #ececff;
+        }
+        .overview-card:hover {
+            box-shadow: 0 6px 24px rgba(44,62,80,0.13);
+            transform: translateY(-4px) scale(1.03);
+            background: linear-gradient(135deg, #d6d8ff 60%, #fff 100%);
+        }
+        .overview-card i {
+            font-size: 2.5em;
+            color: #6c63ff;
+            margin-bottom: 0.7em;
+        }
+        .overview-card h3 {
+            margin: 0.2em 0 0.5em 0;
+            color: #333;
+            font-size: 1.2em;
+        }
+        .overview-card p {
+            color: #888;
+            font-size: 1em;
+        }
+        .quick-links {
+            margin-bottom: 2em;
+            text-align: center;
+        }
+        .quick-links a {
+            display: inline-block;
+            margin-right: 1.5em;
+            color: #6c63ff;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 1.05em;
+            transition: color 0.2s;
+        }
+        .quick-links a:last-child {
+            margin-right: 0;
+        }
+        .quick-links a:hover {
+            color: #554fd8;
+            text-decoration: underline;
+        }
+        .live-section {
+            display: flex;
+            gap: 2em;
+            flex-wrap: wrap;
+            margin-bottom: 2em;
+        }
+        .live-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 16px rgba(44,62,80,0.08);
+            padding: 1.5em 2em;
+            flex: 1 1 260px;
+            min-width: 260px;
+            margin-bottom: 1em;
+            border: 1px solid #ececff;
+        }
+        .live-card h4 {
+            color: #6c63ff;
+            margin-bottom: 0.7em;
+            font-size: 1.1em;
+        }
+        .live-list, .live-table {
+            width: 100%;
+            font-size: 1em;
+        }
+        .live-list li {
+            margin-bottom: 0.5em;
+            color: #444;
+        }
+        .live-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .live-table th, .live-table td {
+            padding: 0.6em 0.8em;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: left;
+        }
+        .live-table th {
+            background: #f5f6fa;
+            color: #333;
+        }
+        .live-table tr:last-child td {
+            border-bottom: none;
+        }
+        .attendance-status-present {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .attendance-status-absent {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .charts-section {
+            display: flex;
+            gap: 2em;
+            flex-wrap: wrap;
+            margin-bottom: 2em;
+        }
+        .chart-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 16px rgba(44,62,80,0.08);
+            padding: 1.5em 2em;
+            flex: 1 1 350px;
+            min-width: 320px;
+            margin-bottom: 1em;
+            border: 1px solid #ececff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .chart-card h4 {
+            color: #6c63ff;
+            margin-bottom: 1em;
+            font-size: 1.1em;
+        }
+        @media (max-width: 1100px) {
+            .main-content {
+                margin: 24px 8px 24px 230px;
+            }
+            .overview-cards, .live-section, .charts-section {
+                flex-direction: column;
+                gap: 1em;
+            }
+        }
+        @media (max-width: 700px) {
+            .container {
+                flex-direction: column;
+            }
+            .main-content {
+                margin: 90px 4px 24px 4px;
+            }
+            .sidebar {
+                position: static !important;
+                width: 100% !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                padding: 1em !important;
+            }
+        }
+    </style>
+    
+    <!-- Modal Styles -->
+    <style>
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #6c63ff;
+        }
+
+        .modal-content h2 {
+            color: #6c63ff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .courses-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .course-item {
+            background: #f8f9ff;
+            border: 1px solid #e9eafc;
+            border-radius: 10px;
+            padding: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .course-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108, 99, 255, 0.1);
+        }
+
+        .course-item h4 {
+            color: #6c63ff;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .course-item p {
+            margin: 5px 0;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .course-item p:first-of-type {
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar" style="position:fixed;left:0;top:0;bottom:0;width:210px;background:#fff;border-radius:18px;margin:24px 0 24px 24px;box-shadow:0 4px 24px rgba(44,62,80,0.08);display:flex;flex-direction:column;padding:2em 1em 1em 1em;z-index:100;">
+            <div class="logo" style="display:flex;align-items:center;gap:12px;margin-bottom:2em;">
+                <img src="../../../gctu logo.png" alt="School Logo" style="width:48px;height:48px;border-radius:50%;object-fit:contain;background:#f5f6fa;">
+                <h2 style="font-size:1.1em;color:#6c63ff;font-weight:bold;margin:0;">GCTU Attendance</h2>
+            </div>
+            <div class="menu">
+                <ul style="list-style:none;padding:0;margin:0;">
+                    <li><a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:#6c63ff;font-size:1.05em;padding:0.7em 1em;border-radius:8px;background:#e9eafc;font-weight:bold;"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="timetable.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:#555;font-size:1.05em;padding:0.7em 1em;border-radius:8px;transition:background 0.2s, color 0.2s;"><i class="fas fa-calendar-alt"></i> Timetable</a></li>
+                    <li><a href="my_attendance.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:#555;font-size:1.05em;padding:0.7em 1em;border-radius:8px;transition:background 0.2s, color 0.2s;"><i class="fas fa-check-circle"></i> My Attendance</a></li>
+                    <li><a href="my_course.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:#555;font-size:1.05em;padding:0.7em 1em;border-radius:8px;transition:background 0.2s, color 0.2s;"><i class="fas fa-user"></i> Profile</a></li>
+                </ul>
+            </div>
+            <div class="help-support" style="margin-top:auto;">
+                <h3 style="font-size:1em;margin:1.5em 0 0.5em 0;color:#888;">Help & Support</h3>
+                <ul style="list-style:none;padding:0;margin:0;">
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                    <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content" style="position:relative;">
+            <!-- Notification Bell Icon (top right corner) -->
+            <div id="notification-bell" style="position:absolute;top:32px;right:48px;z-index:201;cursor:pointer;">
+                <i class="fas fa-bell" style="font-size:2em;color:#6c63ff;transition:color 0.2s;"></i>
+                <span id="notif-dot" style="display:inline-block;width:12px;height:12px;background:#e74c3c;border-radius:50%;position:absolute;top:0;right:0;border:2px solid #fff;"></span>
+            </div>
+            <!-- Notification Dropdown -->
+            <div id="notification-dropdown" style="display:none;position:absolute;top:60px;right:40px;min-width:320px;max-width:400px;background:#fffbe6;border:1px solid #ffe58f;color:#ad8b00;border-radius:10px;padding:1.2em 2em;box-shadow:0 2px 8px rgba(44,62,80,0.13);font-size:1.08em;z-index:202;">
+                <div style="display:flex;align-items:center;gap:1em;">
+                    <i class="fas fa-bell" style="font-size:1.5em;"></i>
+                    <span><b>2 pending attendances!</b> Please scan and mark your attendance.</span>
+                </div>
+                <button onclick="window.location.href='timetable.html';" style="margin-top:1.2em;background:#6c63ff;color:#fff;border:none;border-radius:8px;padding:0.7em 1.5em;font-size:1em;font-weight:bold;cursor:pointer;box-shadow:0 2px 8px rgba(44,62,80,0.10);transition:background 0.2s;">Go to Timetable</button>
+            </div>
+            <h1 style="color:#6c63ff;text-align:center;margin-bottom:2em;">Student Portal Overview</h1>
+            <div class="overview-cards">
+                <div class="overview-card" onclick="window.location.href='timetable.html'">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Timetable</h3>
+                    <p>View your class timetable, scheduled attendance, and calendar.</p>
+                </div>
+                <div class="overview-card" onclick="window.location.href='my_attendance.html'">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>My Attendance</h3>
+                    <p>See your attendance history, stats, and scan for new attendance.</p>
+                </div>
+                    <div class="overview-card" onclick="showCoursesPopup()">
+                        <i class="fas fa-book"></i>
+                        <h3>My Courses</h3>
+                        <p>Click to view your enrolled courses.</p>
+                    </div>
+
+                    <!-- Courses Popup Modal -->
+                    <div id="coursesModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close" onclick="closeCoursesPopup()">&times;</span>
+                            <h2>My Enrolled Courses</h2>
+                            <div class="courses-list">
+                                <div class="course-item">
+                                    <h4>CSC201 - Data Structures</h4>
+                                    <p>Lecturer: Dr. Smith</p>
+                                    <p>Schedule: Mon & Wed, 8:00-10:00 AM</p>
+                                    <p>Room: 203, Block A</p>
+                                </div>
+                                <div class="course-item">
+                                    <h4>CSC301 - Database Systems</h4>
+                                    <p>Lecturer: Dr. Johnson</p>
+                                    <p>Schedule: Tue & Thu, 11:00-1:00 PM</p>
+                                    <p>Room: 105, Block B</p>
+                                </div>
+                                <div class="course-item">
+                                    <h4>MTH102 - Calculus II</h4>
+                                    <p>Lecturer: Dr. Williams</p>
+                                    <p>Schedule: Mon & Fri, 2:00-4:00 PM</p>
+                                    <p>Room: Lab 3, Block C</p>
+                                </div>
+                                <div class="course-item">
+                                    <h4>ENG205 - Digital Logic Design</h4>
+                                    <p>Lecturer: Dr. Brown</p>
+                                    <p>Schedule: Wed & Fri, 9:00-11:00 AM</p>
+                                    <p>Room: 301, Block D</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overview-card" onclick="window.location.href='my_course.html'">
+                        <i class="fas fa-user"></i>
+                        <h3>Profile</h3>
+                        <p>View and update your student profile information.</p>
+                    </div>
+                </div>
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-card">
+                    <h4><i class="fas fa-chart-bar"></i> Attendance Overview</h4>
+                    <canvas id="attendanceChart" height="220"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h4><i class="fas fa-chart-bar"></i> Courses Attendance</h4>
+                    <canvas id="coursesChart" height="220"></canvas>
+                </div>
+            </div>
+            <!-- Live View Section -->
+            <div class="live-section">
+                <!-- Live Attendance -->
+                <div class="live-card">
+                    <h4><i class="fas fa-check-circle"></i> Today's Attendance</h4>
+                    <table class="live-table">
+                        <thead>
+                            <tr>
+                                <th>Course</th>
+                                <th>Status</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Data Structures</td>
+                                <td class="attendance-status-present">Present</td>
+                                <td>09:00 AM</td>
+                            </tr>
+                            <tr>
+                                <td>Database Systems</td>
+                                <td class="attendance-status-absent">Absent</td>
+                                <td>11:00 AM</td>
+                            </tr>
+                            <tr>
+                                <td>Calculus II</td>
+                                <td class="attendance-status-present">Present</td>
+                                <td>02:00 PM</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Live Timetable -->
+                <div class="live-card">
+                    <h4><i class="fas fa-calendar-alt"></i> Today's Timetable</h4>
+                    <ul class="live-list">
+                        <li><b>08:00 - 10:00:</b> Data Structures (Room 203, Block A)</li>
+                        <li><b>11:00 - 13:00:</b> Database Systems (Room 105, Block B)</li>
+                        <li><b>14:00 - 16:00:</b> Calculus II (Lab 3, Block C)</li>
+                    </ul>
+                </div>
+                <!-- Live Courses -->
+                <div class="live-card">
+                    <h4><i class="fas fa-book"></i> Enrolled Courses</h4>
+                    <ul class="live-list">
+                        <li>CSC201 - Data Structures</li>
+                        <li>CSC301 - Database Systems</li>
+                        <li>MTH102 - Calculus II</li>
+                        <li>ENG205 - Digital Logic Design</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="margin-top:2em;text-align:center;color:#888;">
+                Welcome to your student dashboard. Use the cards above to navigate to different sections. Stay updated with your timetable, attendance, and course information.
+            </div>
+        </div>
+    </div>
+    <script src="../auth.js"></script>
+    <script src="../database-client.js"></script>
+    <script>
+        // Global variables
+        let studentData = {};
+
+        // Load student dashboard data
+        async function loadStudentDashboard() {
+            try {
+                const response = await fetch('http://localhost:5000/student/dashboard', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    studentData = result.data;
+                    updateDashboardUI();
+                } else {
+                    console.error('Error loading dashboard:', result.message);
+                    // Fallback to mock data if API fails
+                    loadMockData();
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                loadMockData();
+            }
+        }
+
+        // Update UI with loaded data
+        function updateDashboardUI() {
+            // Update courses modal
+            updateCoursesModal();
+
+            // Update live attendance table
+            updateLiveAttendance();
+
+            // Update live timetable
+            updateLiveTimetable();
+
+            // Update enrolled courses list
+            updateEnrolledCourses();
+
+            // Update charts
+            updateCharts();
+        }
+
+        // Update courses modal with real data
+        function updateCoursesModal() {
+            const coursesList = document.querySelector('.courses-list');
+            if (coursesList && studentData.courses) {
+                const coursesHtml = studentData.courses.map(course => `
+                    <div class="course-item">
+                        <h4>${course.id} - ${course.name}</h4>
+                        <p>Lecturer: ${course.lecturer}</p>
+                        <p>Schedule: ${course.schedule}</p>
+                        <p>Room: ${course.room}</p>
+                    </div>
+                `).join('');
+                coursesList.innerHTML = coursesHtml;
+            }
+        }
+
+        // Update live attendance table
+        function updateLiveAttendance() {
+            const attendanceTable = document.querySelector('.live-table tbody');
+            if (attendanceTable && studentData.today_attendance) {
+                const attendanceHtml = studentData.today_attendance.map(attendance => `
+                    <tr>
+                        <td>${attendance.course}</td>
+                        <td class="attendance-status-${attendance.status.toLowerCase()}">${attendance.status.charAt(0).toUpperCase() + attendance.status.slice(1)}</td>
+                        <td>${attendance.time}</td>
+                    </tr>
+                `).join('');
+                attendanceTable.innerHTML = attendanceHtml;
+            }
+        }
+
+        // Update live timetable
+        function updateLiveTimetable() {
+            const timetableList = document.querySelector('.live-list');
+            if (timetableList && studentData.courses) {
+                const timetableHtml = studentData.courses.map(course => `
+                    <li><b>${course.schedule}:</b> ${course.name} (${course.room})</li>
+                `).join('');
+                timetableList.innerHTML = timetableHtml;
+            }
+        }
+
+        // Update enrolled courses list
+        function updateEnrolledCourses() {
+            const coursesList = document.querySelectorAll('.live-card .live-list')[1];
+            if (coursesList && studentData.courses) {
+                const coursesHtml = studentData.courses.map(course => `
+                    <li>${course.id} - ${course.name}</li>
+                `).join('');
+                coursesList.innerHTML = coursesHtml;
+            }
+        }
+
+        // Update charts with real data
+        function updateCharts() {
+            if (studentData.attendance_stats) {
+                // Update attendance overview chart
+                const ctx1 = document.getElementById('attendanceChart');
+                if (ctx1 && ctx1.chart) {
+                    ctx1.chart.data.datasets[0].data = studentData.attendance_stats.monthly;
+                    ctx1.chart.update();
+                }
+
+                // Update courses attendance chart
+                const ctx2 = document.getElementById('coursesChart');
+                if (ctx2 && ctx2.chart) {
+                    ctx2.chart.data.datasets[0].data = studentData.attendance_stats.courses;
+                    ctx2.chart.update();
+                }
+            }
+        }
+
+        // Fallback mock data
+        function loadMockData() {
+            studentData = {
+                courses: [
+                    {id: 'CSC201', name: 'Data Structures', lecturer: 'Dr. Smith', schedule: 'Mon & Wed, 8:00-10:00 AM', room: '203, Block A'},
+                    {id: 'CSC301', name: 'Database Systems', lecturer: 'Dr. Johnson', schedule: 'Tue & Thu, 11:00-1:00 PM', room: '105, Block B'},
+                    {id: 'MTH102', name: 'Calculus II', lecturer: 'Dr. Williams', schedule: 'Mon & Fri, 2:00-4:00 PM', room: 'Lab 3, Block C'},
+                    {id: 'ENG205', name: 'Digital Logic Design', lecturer: 'Dr. Brown', schedule: 'Wed & Fri, 9:00-11:00 AM', room: '301, Block D'}
+                ],
+                today_attendance: [
+                    {course: 'Data Structures', status: 'present', time: '09:00 AM'},
+                    {course: 'Database Systems', status: 'absent', time: '11:00 AM'},
+                    {course: 'Calculus II', status: 'present', time: '02:00 PM'}
+                ],
+                attendance_stats: {
+                    monthly: [90, 92, 88, 95, 93, 97, 91],
+                    courses: [97, 88, 92, 85]
+                }
+            };
+            updateDashboardUI();
+        }
+
+        // Notification dropdown logic
+        const bell = document.getElementById('notification-bell');
+        const dropdown = document.getElementById('notification-dropdown');
+        let dropdownOpen = false;
+        bell.onclick = function(e) {
+            e.stopPropagation();
+            dropdown.style.display = dropdownOpen ? 'none' : 'block';
+            dropdownOpen = !dropdownOpen;
+        };
+        document.body.onclick = function() {
+            dropdown.style.display = 'none';
+            dropdownOpen = false;
+        };
+        dropdown.onclick = function(e) {
+            e.stopPropagation();
+        };
+
+        // Initialize dashboard on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStudentDashboard();
+
+            // Initialize charts after data is loaded
+            setTimeout(() => {
+                // Attendance Overview Chart
+                const ctx1 = document.getElementById('attendanceChart').getContext('2d');
+                const chart1 = new Chart(ctx1, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                        datasets: [{
+                            label: 'Attendance (%)',
+                            data: [90, 92, 88, 95, 93, 97, 91],
+                            backgroundColor: '#6c63ff',
+                            borderRadius: 8,
+                            maxBarThickness: 40
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: { color: '#888' },
+                                grid: { color: '#ececff' }
+                            },
+                            x: {
+                                ticks: { color: '#888' },
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+
+                // Courses Attendance Chart
+                const ctx2 = document.getElementById('coursesChart').getContext('2d');
+                const chart2 = new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Data Structures', 'Database Systems', 'Calculus II', 'Digital Logic'],
+                        datasets: [{
+                            label: 'Attendance (%)',
+                            data: [97, 88, 92, 85],
+                            backgroundColor: ['#6c63ff', '#554fd8', '#a5a3f7', '#b2b1e6'],
+                            borderRadius: 8,
+                            maxBarThickness: 40
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: { color: '#888' },
+                                grid: { color: '#ececff' }
+                            },
+                            x: {
+                                ticks: { color: '#888' },
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+
+                // Store chart references for updates
+                document.getElementById('attendanceChart').chart = chart1;
+                document.getElementById('coursesChart').chart = chart2;
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

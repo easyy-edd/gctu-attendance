@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Student - Admin Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #f6f7fb;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .add-student-container {
+            max-width: 1100px;
+            margin: 40px auto 0 auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.10);
+            padding: 2.5em 2em 2em 2em;
+        }
+        .add-student-header {
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            margin-bottom: 0.2em;
+        }
+        .add-student-header .icon {
+            background: #22c55e;
+            color: #fff;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+        }
+        .add-student-header h2 {
+            margin: 0;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #222;
+        }
+        .add-student-desc {
+            color: #888;
+            font-size: 1em;
+            margin-bottom: 2em;
+            margin-left: 2.5em;
+        }
+        .student-form-row {
+            display: flex;
+            gap: 1.5em;
+            margin-bottom: 1.2em;
+        }
+        .student-form-row .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            font-size: 0.98em;
+            color: #444;
+            margin-bottom: 0.4em;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group select {
+            padding: 0.9em;
+            border: 1px solid #ececff;
+            border-radius: 8px;
+            font-size: 1em;
+            background: #f8f9fc;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: 2px solid #22c55e33;
+            border-color: #22c55e;
+        }
+        .courses-section {
+            margin-top: 1.5em;
+        }
+        .courses-section label {
+            font-weight: 600;
+            color: #6c63ff;
+            margin-bottom: 0.5em;
+            display: block;
+        }
+        .courses-list {
+            background: #f5f6fa;
+            border-radius: 10px;
+            padding: 1em 1.2em;
+            margin-bottom: 1em;
+            font-size: 0.98em;
+            color: #555;
+            min-height: 40px;
+        }
+        .add-course-row {
+            display: flex;
+            gap: 1em;
+            margin-bottom: 1.5em;
+        }
+        .add-course-row input {
+            flex: 1;
+        }
+        .add-course-btn {
+            background: #6c63ff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.7em 1.5em;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .add-course-btn:hover {
+            background: #554fd8;
+        }
+        .submit-btn {
+            background: #22c55e;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 1em 0;
+            font-size: 1.1em;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 1.5em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .submit-btn:hover {
+            background: #16a34a;
+        }
+        .success-message {
+            color: #22c55e;
+            text-align: center;
+            margin-top: 1em;
+        }
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 1em;
+        }
+        @media (max-width: 900px) {
+            .student-form-row {
+                flex-direction: column;
+                gap: 0.5em;
+            }
+        }
+    </style>
+    <script src="../auth.js"></script>
+</head>
+<body>
+    <div style="max-width: 1100px; margin: 20px auto 0 auto; text-align: left;">
+        <a href="index.html" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: #6c63ff; font-weight: bold; font-size: 1em; margin-bottom: 20px;">
+            <span style="font-size: 1.2em;">&#8592;</span> Back to Dashboard
+        </a>
+    </div>
+    <div class="add-student-container">
+        <div class="add-student-header">
+            <div class="icon">&#128100;</div>
+            <h2>Add New Student</h2>
+        </div>
+        <div class="add-student-desc">
+            Enter student information to add them to the system
+        </div>
+        <form id="addStudentForm">
+            <div class="student-form-row">
+                <div class="form-group">
+                    <label for="studentIndex">Student ID</label>
+                    <input type="text" id="studentIndex" name="user_id" placeholder="Enter student ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentName">Full Name</label>
+                    <input type="text" id="studentName" name="name" placeholder="Enter full name" required>
+                </div>
+            </div>
+            <div class="student-form-row">
+                <div class="form-group">
+                    <label for="studentEmail">Email</label>
+                    <input type="email" id="studentEmail" name="email" placeholder="Enter email address">
+                </div>
+                <div class="form-group">
+                    <label for="studentDept">Department</label>
+                    <select id="studentDept" name="department" required>
+                        <option value="">Select department</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Information Technology">Information Technology</option>
+                        <option value="Business Administration">Business Administration</option>
+                        <option value="Engineering">Engineering</option>
+                        <!-- Add more as needed -->
+                    </select>
+                </div>
+            </div>
+            <div class="student-form-row">
+                <div class="form-group">
+                    <label for="studentLevel">Level</label>
+                    <select id="studentLevel" name="level" required>
+                        <option value="">Select level</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                        <option value="300">300</option>
+                        <option value="400">400</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="studentProgram">Program</label>
+                    <select id="studentProgram" name="program" required>
+                        <option value="">Select program</option>
+                        <option value="BSc Computer Science">BSc Computer Science</option>
+                        <option value="BSc Information Technology">BSc Information Technology</option>
+                        <option value="BSc Business Administration">BSc Business Administration</option>
+                        <!-- Add more as needed -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="studentDegree">Degree Type</label>
+                    <select id="studentDegree" name="degree_type" required>
+                        <option value="">Select degree type</option>
+                        <option value="BSc">BSc</option>
+                        <option value="BA">BA</option>
+                        <option value="HND">HND</option>
+                        <!-- Add more as needed -->
+                    </select>
+                </div>
+            </div>
+            <div class="courses-section">
+                <label>Courses</label>
+                <div class="courses-list" id="coursesList">
+                    Select a program and level to automatically populate courses
+                </div>
+                <div class="add-course-row">
+                    <input type="text" id="courseInput" placeholder="Add additional course code">
+                    <button type="button" class="add-course-btn" onclick="addCourse()">Add Course</button>
+                </div>
+            </div>
+            <button type="submit" class="submit-btn">Add Student</button>
+            <div id="studentMsg"></div>
+        </form>
+    </div>
+    <script>
+    // Example: auto-populate courses based on program and level
+    const programCourses = {
+        "BSc Computer Science": {
+            "100": ["CS101", "CS102", "MTH101"],
+            "200": ["CS201", "CS202", "MTH201"],
+            "300": ["CS301", "CS302", "MTH301"],
+            "400": ["CS401", "CS402", "MTH401"]
+        },
+        "BSc Information Technology": {
+            "100": ["IT101", "IT102", "MTH101"],
+            "200": ["IT201", "IT202", "MTH201"],
+            "300": ["IT301", "IT302", "MTH301"],
+            "400": ["IT401", "IT402", "MTH401"]
+        },
+        "BSc Business Administration": {
+            "100": ["BA101", "BA102", "MTH101"],
+            "200": ["BA201", "BA202", "MTH201"],
+            "300": ["BA301", "BA302", "MTH301"],
+            "400": ["BA401", "BA402", "MTH401"]
+        }
+    };
+
+    let courses = [];
+
+    function updateCourses() {
+        const program = document.getElementById('studentProgram').value;
+        const level = document.getElementById('studentLevel').value;
+        const coursesList = document.getElementById('coursesList');
+        courses = [];
+        if (programCourses[program] && programCourses[program][level]) {
+            courses = [...programCourses[program][level]];
+            coursesList.textContent = courses.join(', ');
+        } else {
+            coursesList.textContent = 'Select a program and level to automatically populate courses';
+        }
+    }
+
+    document.getElementById('studentProgram').addEventListener('change', updateCourses);
+    document.getElementById('studentLevel').addEventListener('change', updateCourses);
+
+    function addCourse() {
+        const input = document.getElementById('courseInput');
+        const val = input.value.trim();
+        if (val && !courses.includes(val)) {
+            courses.push(val);
+            document.getElementById('coursesList').textContent = courses.join(', ');
+            input.value = '';
+        }
+    }
+
+    document.getElementById('addStudentForm').onsubmit = async function(e) {
+        e.preventDefault();
+
+        // Check if user is authenticated
+        if (!auth.isAuthenticated()) {
+            document.getElementById('studentMsg').innerHTML = '<div class="error-message">You must be logged in to add students. Redirecting to login...</div>';
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+            return;
+        }
+
+        // Collect form data
+        const data = {
+            user_id: this.user_id.value.trim(),
+            name: this.name.value.trim(),
+            email: this.email.value.trim(),
+            department: this.department.value,
+            level: parseInt(this.level.value),
+            program: this.program.value,
+            password: "student @gctu",
+            role: 'student',
+            courses: courses
+        };
+
+        console.log('DEBUG: Sending request with data:', data);
+        console.log('DEBUG: Auth token exists:', !!auth.getToken());
+
+        // Send to backend
+        try {
+            const res = await auth.authenticatedRequest('http://localhost:5000/register', {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+
+            console.log('DEBUG: Response status:', res.status);
+            const result = await res.json();
+            console.log('DEBUG: Response data:', result);
+
+            const msgDiv = document.getElementById('studentMsg');
+            if (result.status === 'success') {
+                msgDiv.innerHTML = '<div class="success-message">Student added successfully!</div>';
+                this.reset();
+                courses = [];
+                document.getElementById('coursesList').textContent = 'Select a program and level to automatically populate courses';
+            } else {
+                msgDiv.innerHTML = '<div class="error-message">' + result.message + '</div>';
+            }
+        } catch (error) {
+            console.error('DEBUG: Request error:', error);
+            document.getElementById('studentMsg').innerHTML = '<div class="error-message">Network error: ' + error.message + '. Please try again.</div>';
+        }
+    };
+    </script>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecturer Dashboard - Attendance System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="../../../gctu logo.png" alt="School Logo">
+                <h2>GCTU Attendance</h2>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li class="active"><a href="index.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li><a href="students.html"><i class="fas fa-user-graduate"></i> Students</a></li>
+                    <li><a href="attendance.html"><i class="fas fa-calendar-check"></i> Attendance</a></li>
+                    <li><a href="courses.html"><i class="fas fa-book"></i> Courses</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                </ul>
+            </div>
+            <div class="help-support">
+                <h3>Help & Support</h3>
+                <ul>
+                    <li><a href="#"><i class="fas fa-question-circle"></i> Help Center</a></li>
+                    <li><a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search your data">
+                </div>
+                <div class="user-profile">
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="profile">
+                        <img src="https://via.placeholder.com/40" alt="Profile">
+                        <span>Dr. Smith</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Total Students</h3>
+                        <h2>120</h2>
+                        <span class="increase">+15% <span>New Students</span></span>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Total Present</h3>
+                        <h2>98</h2>
+                        <span class="decrease">-5% <span>Daily Attendance</span></span>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Total Absent</h3>
+                        <h2>22</h2>
+                        <span class="decrease">-54% <span>From Last Week</span></span>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Total Courses</h3>
+                        <h2>5</h2>
+                        <span class="neutral">+0% <span>No Change</span></span>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendance Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h2>Daily attendance statistic</h2>
+                </div>
+                <div class="chart-content">
+                    <div class="chart-placeholder">
+                        <!-- This would be replaced with an actual chart library -->
+                        <div class="bar-chart">
+                            <div class="day">
+                                <div class="bar-wrapper">
+                                    <div class="bar present"></div>
+                                    <div class="bar absent"></div>
+                                </div>
+                                <span>Mon</span>
+                            </div>
+                            <div class="day">
+                                <div class="bar-wrapper">
+                                    <div class="bar present"></div>
+                                    <div class="bar absent"></div>
+                                </div>
+                                <span>Tue</span>
+                            </div>
+                            <div class="day">
+                                <div class="bar-wrapper">
+                                    <div class="bar present"></div>
+                                    <div class="bar absent"></div>
+                                </div>
+                                <span>Wed</span>
+                            </div>
+                            <div class="day">
+                                <div class="bar-wrapper">
+                                    <div class="bar present"></div>
+                                    <div class="bar absent"></div>
+                                </div>
+                                <span>Thu</span>
+                            </div>
+                            <div class="day">
+                                <div class="bar-wrapper">
+                                    <div class="bar present"></div>
+                                    <div class="bar absent"></div>
+                                </div>
+                                <span>Fri</span>
+                            </div>
+                        </div>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <span class="legend-color present"></span>
+                                <span>Present</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color absent"></span>
+                                <span>Absent</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Sections -->
+            <div class="bottom-container">
+                <!-- Course List -->
+                <div class="course-list">
+                    <div class="section-header">
+                        <h2>Course List</h2>
+                        <a href="#" class="view-all">See All <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                    <div class="course-stats">
+                        <div class="course-item">
+                            <div class="course-name">Computer Science 101</div>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 85%;"></div>
+                            </div>
+                            <div class="course-count">85 Students</div>
+                        </div>
+                        <div class="course-item">
+                            <div class="course-name">Mathematics 202</div>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 65%;"></div>
+                            </div>
+                            <div class="course-count">65 Students</div>
+                        </div>
+                        <div class="course-item">
+                            <div class="course-name">Physics 101</div>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 45%;"></div>
+                            </div>
+                            <div class="course-count">45 Students</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attendance Applications -->
+                <div class="attendance-applications">
+                    <div class="section-header">
+                        <h2>Absence Requests</h2>
+                        <a href="#" class="view-all">See All <i class="fas fa-chevron-right"></i></a>
+                    </div>
+                    <div class="application-list">
+                        <div class="application-item">
+                            <div class="student-info">
+                                <img src="https://via.placeholder.com/40" alt="Student">
+                                <div>
+                                    <h4>John Smith</h4>
+                                    <p>Reason: Medical</p>
+                                </div>
+                            </div>
+                            <div class="status approved">Approved</div>
+                        </div>
+                        <div class="application-item">
+                            <div class="student-info">
+                                <img src="https://via.placeholder.com/40" alt="Student">
+                                <div>
+                                    <h4>Sarah Johnson</h4>
+                                    <p>Reason: Family Emergency</p>
+                                </div>
+                            </div>
+                            <div class="status rejected">Rejected</div>
+                        </div>
+                        <div class="application-item">
+                            <div class="student-info">
+                                <img src="https://via.placeholder.com/40" alt="Student">
+                                <div>
+                                    <h4>Michael Brown</h4>
+                                    <p>Reason: Medical</p>
+                                </div>
+                            </div>
+                            <div class="status pending">Pending</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student List -->
+            <div class="student-list">
+                <div class="section-header">
+                    <h2>Student List</h2>
+                    <button class="add-student-btn"><i class="fas fa-plus"></i> Add New Student</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>ID</th>
+                            <th>Email</th>
+                            <th>Course</th>
+                            <th>Attendance Rate</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>John Smith</td>
+                            <td>S001</td>
+                            <td>john@example.com</td>
+                            <td>Computer Science</td>
+                            <td class="attendance-rate high">95%</td>
+                            <td><i class="fas fa-ellipsis-h"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Sarah Johnson</td>
+                            <td>S002</td>
+                            <td>sarah@example.com</td>
+                            <td>Mathematics</td>
+                            <td class="attendance-rate medium">85%</td>
+                            <td><i class="fas fa-ellipsis-h"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Michael Brown</td>
+                            <td>S003</td>
+                            <td>michael@example.com</td>
+                            <td>Physics</td>
+                            <td class="attendance-rate low">65%</td>
+                            <td><i class="fas fa-ellipsis-h"></i></td>
+                        </tr>
+                        <tr>
+                            <td>Emily Davis</td>
+                            <td>S004</td>
+                            <td>emily@example.com</td>
+                            <td>Computer Science</td>
+                            <td class="attendance-rate high">92%</td>
+                            <td><i class="fas fa-ellipsis-h"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="../auth.js"></script>
+    <script src="../database-client.js"></script>
+    <script>
+        // Global variables
+        let lecturerData = {};
+
+        // Load lecturer dashboard data
+        async function loadLecturerDashboard() {
+            try {
+                const response = await fetch('http://localhost:5000/lecturer/dashboard', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    lecturerData = result.data;
+                    updateLecturerDashboardUI();
+                } else {
+                    console.error('Error loading dashboard:', result.message);
+                    // Fallback to existing mock data
+                    loadMockLecturerData();
+                }
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                loadMockLecturerData();
+            }
+        }
+
+        // Update lecturer dashboard UI with real data
+        function updateLecturerDashboardUI() {
+            // Update stats cards
+            updateStatsCards();
+
+            // Update course list
+            updateCourseList();
+
+            // Update absence requests
+            updateAbsenceRequests();
+
+            // Update student list
+            updateStudentList();
+        }
+
+        // Update statistics cards
+        function updateStatsCards() {
+            if (lecturerData.stats) {
+                const statCards = document.querySelectorAll('.stat-card');
+                const stats = lecturerData.stats;
+
+                // Update Total Students
+                if (statCards[0]) {
+                    statCards[0].querySelector('h2').textContent = stats.total_students;
+                }
+
+                // Update Total Present
+                if (statCards[1]) {
+                    statCards[1].querySelector('h2').textContent = stats.total_present;
+                }
+
+                // Update Total Absent
+                if (statCards[2]) {
+                    statCards[2].querySelector('h2').textContent = stats.total_absent;
+                }
+
+                // Update Total Courses
+                if (statCards[3]) {
+                    statCards[3].querySelector('h2').textContent = stats.total_courses;
+                }
+            }
+        }
+
+        // Update course list
+        function updateCourseList() {
+            const courseStats = document.querySelector('.course-stats');
+            if (courseStats && lecturerData.courses) {
+                const coursesHtml = lecturerData.courses.map(course => `
+                    <div class="course-item">
+                        <div class="course-name">${course.name}</div>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: ${course.attendance_rate}%;"></div>
+                        </div>
+                        <div class="course-count">${course.students} Students</div>
+                    </div>
+                `).join('');
+                courseStats.innerHTML = coursesHtml;
+            }
+        }
+
+        // Update absence requests
+        function updateAbsenceRequests() {
+            const applicationList = document.querySelector('.application-list');
+            if (applicationList && lecturerData.absence_requests) {
+                const requestsHtml = lecturerData.absence_requests.map(request => `
+                    <div class="application-item">
+                        <div class="student-info">
+                            <img src="https://via.placeholder.com/40" alt="Student">
+                            <div>
+                                <h4>${request.student_name}</h4>
+                                <p>Reason: ${request.reason}</p>
+                            </div>
+                        </div>
+                        <div class="status ${request.status}">${request.status.charAt(0).toUpperCase() + request.status.slice(1)}</div>
+                    </div>
+                `).join('');
+                applicationList.innerHTML = requestsHtml;
+            }
+        }
+
+        // Update student list table
+        function updateStudentList() {
+            const studentTableBody = document.querySelector('.student-list table tbody');
+            if (studentTableBody && lecturerData.students) {
+                const studentsHtml = lecturerData.students.map(student => `
+                    <tr>
+                        <td>${student.name}</td>
+                        <td>${student.id}</td>
+                        <td>${student.email}</td>
+                        <td>${student.course}</td>
+                        <td class="attendance-rate ${student.attendance_rate >= 90 ? 'high' : student.attendance_rate >= 70 ? 'medium' : 'low'}">${student.attendance_rate}%</td>
+                        <td><i class="fas fa-ellipsis-h"></i></td>
+                    </tr>
+                `).join('');
+                studentTableBody.innerHTML = studentsHtml;
+            }
+        }
+
+        // Fallback mock data
+        function loadMockLecturerData() {
+            lecturerData = {
+                stats: {
+                    total_students: 120,
+                    total_present: 98,
+                    total_absent: 22,
+                    total_courses: 5
+                },
+                courses: [
+                    {name: 'Computer Science 101', students: 85, attendance_rate: 85},
+                    {name: 'Mathematics 202', students: 65, attendance_rate: 65},
+                    {name: 'Physics 101', students: 45, attendance_rate: 45}
+                ],
+                absence_requests: [
+                    {student_name: 'John Smith', reason: 'Medical', status: 'approved'},
+                    {student_name: 'Sarah Johnson', reason: 'Family Emergency', status: 'rejected'},
+                    {student_name: 'Michael Brown', reason: 'Medical', status: 'pending'}
+                ],
+                students: [
+                    {name: 'John Smith', id: 'S001', email: 'john@example.com', course: 'Computer Science', attendance_rate: 95},
+                    {name: 'Sarah Johnson', id: 'S002', email: 'sarah@example.com', course: 'Mathematics', attendance_rate: 85},
+                    {name: 'Michael Brown', id: 'S003', email: 'michael@example.com', course: 'Physics', attendance_rate: 65},
+                    {name: 'Emily Davis', id: 'S004', email: 'emily@example.com', course: 'Computer Science', attendance_rate: 92}
+                ]
+            };
+            updateLecturerDashboardUI();
+        }
+
+        // Initialize dashboard on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLecturerDashboard();
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

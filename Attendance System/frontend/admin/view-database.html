@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Database - Admin Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .database-container {
+            max-width: 1200px;
+            margin: 40px auto 0 auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.10);
+            padding: 2.5em 2em 2em 2em;
+        }
+        .database-header {
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            margin-bottom: 2em;
+        }
+        .database-header .icon {
+            background: #6c63ff;
+            color: #fff;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+        }
+        .database-header h2 {
+            margin: 0;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #222;
+        }
+        .database-desc {
+            color: #888;
+            font-size: 1em;
+            margin-bottom: 2em;
+            margin-left: 2.5em;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin-top: 2em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 1em;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+        .loading {
+            text-align: center;
+            padding: 2em;
+            color: #666;
+        }
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            padding: 2em;
+        }
+        .refresh-btn {
+            background: #6c63ff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8em 1.5em;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 1em;
+            transition: background 0.2s;
+        }
+        .refresh-btn:hover {
+            background: #554fd8;
+        }
+    </style>
+</head>
+<body>
+    <div class="database-container">
+        <div class="database-header">
+            <div class="icon">&#128202;</div>
+            <h2>Database Viewer</h2>
+        </div>
+        <div class="database-desc">
+            View all data stored in the attendance system database
+        </div>
+        <button class="refresh-btn" onclick="loadDatabase()">Refresh Database</button>
+        <div id="databaseContent">
+            <div class="loading">Loading database content...</div>
+        </div>
+    </div>
+
+    <script>
+        async function loadDatabase() {
+            const contentDiv = document.getElementById('databaseContent');
+            contentDiv.innerHTML = '<div class="loading">Loading database content...</div>';
+
+            try {
+                // Try to fetch from backend API
+                const response = await fetch('http://localhost:5000/users', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.status === 'success') {
+                        displayUsers(result.users);
+                    } else {
+                        throw new Error(result.message);
+                    }
+                } else {
+                    throw new Error('Failed to fetch data');
+                }
+            } catch (error) {
+                console.error('Error loading database:', error);
+                contentDiv.innerHTML = '<div class="error">Error loading database: ' + error.message + '</div>';
+            }
+        }
+
+        function displayUsers(users) {
+            if (!users || users.length === 0) {
+                document.getElementById('databaseContent').innerHTML = '<div class="loading">No users found in database</div>';
+                return;
+            }
+
+            let html = '<div class="table-container"><table>';
+            html += '<thead><tr>';
+            html += '<th>ID</th>';
+            html += '<th>Name</th>';
+            html += '<th>Email</th>';
+            html += '<th>Role</th>';
+            html += '<th>Created</th>';
+            html += '</tr></thead><tbody>';
+
+            users.forEach(user => {
+                html += '<tr>';
+                html += `<td>${user.user_id || ''}</td>`;
+                html += `<td>${user.name || ''}</td>`;
+                html += `<td>${user.email || ''}</td>`;
+                html += `<td>${user.role || ''}</td>`;
+                html += `<td>${user.created_at ? new Date(user.created_at).toLocaleDateString() : ''}</td>`;
+                html += '</tr>';
+            });
+
+            html += '</tbody></table></div>';
+            document.getElementById('databaseContent').innerHTML = html;
+        }
+
+        // Load database on page load
+        document.addEventListener('DOMContentLoaded', loadDatabase);
+    </script>
+</body>
+</html>

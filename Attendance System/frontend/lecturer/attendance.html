@@ -1,0 +1,626 @@
+<!-- Example: c:\Users\akpeh\OneDrive\Documents\Attendance System\frontend\lecturer\students.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance - Lecturer Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background: #e9eafc;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 220px;
+            background: #fff;
+            border-radius: 18px;
+            margin: 24px 0 24px 24px;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.08);
+            display: flex;
+            flex-direction: column;
+            padding: 2em 1em 1em 1em;
+        }
+        .sidebar .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 2em;
+        }
+        .sidebar .logo img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: contain;
+            background: #f5f6fa;
+        }
+        .sidebar .logo h2 {
+            font-size: 1.1em;
+            color: #6c63ff;
+            font-weight: bold;
+            margin: 0;
+        }
+        .sidebar .menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar .menu li {
+            margin-bottom: 1.2em;
+        }
+        .sidebar .menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #555;
+            font-size: 1.05em;
+            padding: 0.7em 1em;
+            border-radius: 8px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar .menu .active a,
+        .sidebar .menu a:hover {
+            background: #6c63ff;
+            color: #fff;
+        }
+        .sidebar .menu i {
+            font-size: 1.2em;
+        }
+        .sidebar .logout {
+            margin-top: auto;
+        }
+        .sidebar .logout a {
+            color: #e74c3c;
+            background: #fbeee6;
+        }
+        /* Main content */
+        .main-content {
+            flex: 1;
+            margin: 24px 24px 24px 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5em 2em 1em 2em;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(44,62,80,0.08);
+            margin-bottom: 1.5em;
+        }
+        .topbar .search-bar {
+            display: flex;
+            align-items: center;
+            background: #f5f6fa;
+            border-radius: 8px;
+            padding: 0.5em 1em;
+            gap: 10px;
+        }
+        .topbar .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 1em;
+        }
+        .topbar .profile {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .topbar .profile img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .dashboard {
+            display: flex;
+            gap: 2em;
+        }
+        .dashboard-main {
+            flex: 2.5;
+            display: flex;
+            flex-direction: column;
+            gap: 2em;
+        }
+        .stats-row {
+            display: flex;
+            gap: 2em;
+        }
+        .stat-card {
+            flex: 1;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 16px rgba(44,62,80,0.08);
+            padding: 1.2em 1.5em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5em;
+        }
+        .stat-card i {
+            font-size: 1.6em;
+            color: #6c63ff;
+        }
+        .stat-card .stat-label {
+            color: #888;
+            font-size: 1em;
+        }
+        .stat-card .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        .attendance-overview {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 16px rgba(44,62,80,0.08);
+            padding: 2em 2em 1.5em 2em;
+            margin-bottom: 1em;
+        }
+        .attendance-overview h3 {
+            margin: 0 0 1em 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .attendance-overview .chart-container {
+            width: 100%;
+            height: 220px;
+        }
+        .create-attendance-section {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 16px rgba(44,62,80,0.08);
+            padding: 2em;
+            margin-bottom: 1em;
+        }
+        .create-attendance-section h3 {
+            margin-bottom: 1.2em;
+            color: #6c63ff;
+        }
+        .create-attendance-cards {
+            display: flex;
+            gap: 1em; /* Reduced gap for compactness */
+            flex-wrap: nowrap; /* Prevent wrapping on desktop */
+            justify-content: flex-start;
+        }
+        .create-card {
+            width: 220px; /* Reduced width for both cards */
+            min-width: 0;
+            background: #f5f6fa;
+            border-radius: 12px;
+            padding: 1em;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.04);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.7em;
+            box-sizing: border-box;
+        }
+        .create-card i {
+            font-size: 2em;
+            color: #6c63ff;
+        }
+        .create-card label {
+            font-weight: bold;
+            margin-bottom: 0.3em;
+        }
+        .create-card select, .create-card input, .create-card button {
+            width: 100%;
+            padding: 0.6em;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 0.7em;
+            font-size: 1em;
+        }
+        .create-card button {
+            background: #6c63ff;
+            color: #fff;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .create-card button:hover {
+            background: #554fd8;
+        }
+        .dashboard-side {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            gap: 2em;
+        }
+        .calendar-widget, .notice-widget {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 16px rgba(44,62,80,0.08);
+            padding: 1.5em;
+        }
+        .calendar-widget h4, .notice-widget h4 {
+            margin-bottom: 1em;
+            color: #6c63ff;
+        }
+        .calendar-widget input[type="month"] {
+            width: 100%;
+            padding: 0.6em;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+            margin-bottom: 1em;
+        }
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+        .calendar-table th, .calendar-table td {
+            padding: 0.4em;
+            border-radius: 6px;
+        }
+        .calendar-table th {
+            color: #888;
+            font-weight: normal;
+        }
+        .calendar-table td.today {
+            background: #6c63ff;
+            color: #fff;
+        }
+        .notice-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .notice-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1em;
+            font-size: 1em;
+        }
+        .notice-list img {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        @media (max-width: 1100px) {
+            .dashboard {
+                flex-direction: column;
+            }
+            .dashboard-main, .dashboard-side {
+                width: 100%;
+            }
+            .create-attendance-cards {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .create-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="../../gctu logo.png" alt="School Logo">
+                <h2>GCTU Attendance</h2>
+            </div>
+            <div class="menu">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-th-large"></i> Dashboard</a></li>
+                    <li class="active"><a href="attendance.html"><i class="fas fa-calendar-check"></i> Take Attendance</a></li>
+                    <li><a href="students.html"><i class="fas fa-user-graduate"></i> Students List</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Setting</a></li>
+                </ul>
+            </div>
+            <div class="logout">
+                <a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Topbar -->
+            <div class="topbar">
+                <div style="font-size:1.5em; font-weight:bold; color:#333;">Attendance</div>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search Student ID">
+                </div>
+                <div class="profile">
+                    <span style="font-weight:500;">Dr. Lecturer</span>
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile">
+                </div>
+            </div>
+            <!-- Dashboard Layout -->
+            <div class="dashboard">
+                <!-- Main -->
+                <div class="dashboard-main">
+                    <!-- Stats Row -->
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <i class="fas fa-users"></i>
+                            <div class="stat-label">Total Students</div>
+                            <div class="stat-value">550</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-user-tie"></i>
+                            <div class="stat-label">Total Teachers</div>
+                            <div class="stat-value">20</div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-clock"></i>
+                            <div class="stat-label">Current Time</div>
+                            <div class="stat-value" id="currentTime"></div>
+                        </div>
+                    </div>
+                    <!-- Attendance Overview Chart -->
+                    <div class="attendance-overview">
+                        <h3>Attendance Overview</h3>
+                        <div class="chart-container">
+                            <canvas id="attendanceOverviewChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- Create Attendance Section -->
+                    <div class="create-attendance-section">
+                        <h3>Create Attendance</h3>
+                        <div class="create-attendance-cards">
+                            <!-- QR Code Card (left) -->
+                            <div class="create-card">
+                                <i class="fas fa-qrcode"></i>
+                                <label for="qrCourse">Course</label>
+                                <select id="qrCourse">
+                                    <option value="">Select Course</option>
+                                    <option value="CSC201">Data Structures</option>
+                                    <option value="CSC301">Database Systems</option>
+                                    <option value="ENG205">Digital Logic Design</option>
+                                    <option value="MTH102">Calculus II</option>
+                                </select>
+                                <label for="qrExpiry">Expires in</label>
+                                <select id="qrExpiry">
+                                    <option value="5">5 minutes</option>
+                                    <option value="10">10 minutes</option>
+                                    <option value="15">15 minutes</option>
+                                    <option value="30">30 minutes</option>
+                                    <option value="60">1 hour</option>
+                                </select>
+                                <button id="generateQRBtn">Generate QR Code</button>
+                                <div id="qrCodeContainer" style="width:100%;height:80px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:8px;margin-top:1em;">
+                                    <span style="color:#bbb;">QR code will appear here</span>
+                                </div>
+                            </div>
+                            <!-- Student ID Scanner Card (right) -->
+                            <div class="create-card">
+                                <i class="fas fa-id-card"></i>
+                                <label for="scannerCourse">Course</label>
+                                <select id="scannerCourse">
+                                    <option value="">Select Course</option>
+                                    <option value="CSC201">Data Structures</option>
+                                    <option value="CSC301">Database Systems</option>
+                                    <option value="ENG205">Digital Logic Design</option>
+                                    <option value="MTH102">Calculus II</option>
+                                </select>
+                                <button id="startScanningBtn">Start Scanning</button>
+                                <label for="studentIdInput">Or enter Student ID</label>
+                                <input type="text" id="studentIdInput" placeholder="Enter Student ID">
+                                <button id="submitIdBtn">Submit</button>
+                                <div id="scannerContainer" style="width:100%;height:40px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:8px;margin-top:1em;">
+                                    <span style="color:#bbb;">Scanner will activate here</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Side Widgets -->
+                <div class="dashboard-side">
+                    <!-- Calendar Widget -->
+                    <div class="calendar-widget">
+                        <h4>Calendar</h4>
+                        <input type="month" id="calendarMonth" name="calendarMonth" value="2025-08">
+                        <table class="calendar-table">
+                            <thead>
+                                <tr>
+                                    <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td><td></td><td></td><td></td><td></td><td class="today">1</td><td>2</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td>
+                                </tr>
+                                <tr>
+                                    <td>10</td><td>11</td><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td>
+                                </tr>
+                                <tr>
+                                    <td>17</td><td>18</td><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td>
+                                </tr>
+                                <tr>
+                                    <td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td>
+                                </tr>
+                                <tr>
+                                    <td>31</td><td></td><td></td><td></td><td></td><td></td><td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Notice Widget -->
+                    <div class="notice-widget">
+                        <h4>Notice</h4>
+                        <ul class="notice-list">
+                            <li>
+                                <img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=facearea&w=80&h=80" alt="Exam">
+                                <div>
+                                    <div>Up coming Examination</div>
+                                    <small>25 Aug 2025</small>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=facearea&w=80&h=80" alt="Off day">
+                                <div>
+                                    <div>Off day</div>
+                                    <small>30 Aug 2025</small>
+                                </div>
+                            </li>
+                            <li>
+                                <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=facearea&w=80&h=80" alt="Match">
+                                <div>
+                                    <div>Basketball Match</div>
+                                    <small>1 Sep 2025</small>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../auth.js"></script>
+    <script src="../database-client.js"></script>
+    <script>
+        // Global variables
+        let lecturerAttendanceData = {};
+
+        // Load lecturer attendance data
+        async function loadLecturerAttendance() {
+            try {
+                const response = await fetch('http://localhost:5000/lecturer/attendance', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    lecturerAttendanceData = result.attendance;
+                    updateAttendanceUI();
+                } else {
+                    console.error('Error loading attendance:', result.message);
+                    loadMockAttendanceData();
+                }
+            } catch (error) {
+                console.error('Error loading attendance:', error);
+                loadMockAttendanceData();
+            }
+        }
+
+        // Update attendance UI with real data
+        function updateAttendanceUI() {
+            // Update stats cards
+            updateStatsCards();
+
+            // Update attendance overview chart
+            updateAttendanceChart();
+
+            // Update attendance table (if exists)
+            updateAttendanceTable();
+        }
+
+        // Update statistics cards
+        function updateStatsCards() {
+            // Mock stats for now - in real app, this would come from the API
+            const stats = {
+                total_students: 550,
+                total_teachers: 20
+            };
+
+            // Update the stat cards
+            const statCards = document.querySelectorAll('.stat-card .stat-value');
+            if (statCards.length >= 2) {
+                statCards[0].textContent = stats.total_students;
+                statCards[1].textContent = stats.total_teachers;
+            }
+        }
+
+        // Update attendance overview chart
+        function updateAttendanceChart() {
+            const ctx = document.getElementById('attendanceOverviewChart');
+            if (ctx) {
+                // Mock data for chart - in real app, this would come from the API
+                const chartData = {
+                    labels: ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                    data: [250, 420, 390, 320, 370, 370.5]
+                };
+
+                new Chart(ctx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: chartData.labels,
+                        datasets: [{
+                            label: 'Attendance',
+                            data: chartData.data,
+                            fill: true,
+                            backgroundColor: 'rgba(108,99,255,0.10)',
+                            borderColor: '#6c63ff',
+                            tension: 0.4,
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#6c63ff',
+                            pointRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 100 }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Update attendance table
+        function updateAttendanceTable() {
+            // This would be used if there's a table to display attendance records
+            // For now, the attendance recording is handled by the existing functions
+        }
+
+        // Fallback mock data
+        function loadMockAttendanceData() {
+            lecturerAttendanceData = [
+                {student_name: 'John Smith', student_id: 'S001', status: 'Present', time: '09:00 AM', method: 'QR Code'},
+                {student_name: 'Sarah Johnson', student_id: 'S002', status: 'Present', time: '09:05 AM', method: 'Manual'},
+                {student_name: 'Michael Brown', student_id: 'S003', status: 'Absent', time: '-', method: '-'}
+            ];
+            updateAttendanceUI();
+        }
+
+        // Current Time
+        function updateTime() {
+            const now = new Date();
+            let h = now.getHours();
+            let m = now.getMinutes();
+            let ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12;
+            h = h ? h : 12;
+            m = m < 10 ? '0' + m : m;
+            document.getElementById('currentTime').textContent = h + ':' + m + ' ' + ampm;
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLecturerAttendance();
+            updateTime();
+            setInterval(updateTime, 1000);
+        });
+    </script>
+</body>
+</html>
